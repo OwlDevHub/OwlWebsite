@@ -28,6 +28,27 @@
   src: local("Roboto");
 }
 
+@font-face {
+  font-family: "Archivo", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local("Archivo");
+}
+
+@font-face {
+  font-family: "Tangerine", cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local("Tangerine");
+}
+
+.owl-demo *:focus-visible {
+  outline: 3px solid var(--accent);
+}
+
 .owl-demo * {
   outline: none;
   font-display: swap;
@@ -37,18 +58,18 @@
   user-select: none;
   cursor: default;
   font-optical-sizing: auto;
-  font-size: 1rem;
+  font-size: var(--text-md);
   box-sizing: content-box;
 }
 
 .owl-demo {
   --border-radius: 15px;
   --border-radius-l: 20px;
-  --spacing-xs: 5px;
-  --spacing-s: 10px;
-  --spacing-m: 15px;
-  --spacing-l: 20px;
-  --spacing-xl: 30px;
+  --spacing-xs: 3px;
+  --spacing-s: 8px;
+  --spacing-m: 12px;
+  --spacing-l: 16px;
+  --spacing-xl: 25px;
   --spacing-xxl: 50px;
   --page-margin: 40px;
   --shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
@@ -57,8 +78,8 @@
   --bg-filter: blur(5px);
   --bg-filter-2: blur(50px);
   --modal-icon-size: 250px;
-  --text-xs: 0.7rem;
-  --text-sm: 0.8rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
   --text-base: 0.9rem;
   --text-md: 0.95rem;
   --text-lg: 1rem;
@@ -66,6 +87,7 @@
   --text-2xl: 1.2rem;
   --text-3xl: 1.5rem;
   --text-4xl: 1.6rem;
+  --text-5xl: 2.2rem;
 
   /* Backgrounds - Earthy & Deep */
   --bg: #14120b; /* main background (чуть теплее темного) */
@@ -257,14 +279,16 @@
 
 .owl-demo .login-buttons .button {
   background-color: transparent;
-  font-family: Merienda;
+  font-family: Archivo;
   box-shadow: none;
+  font-size: var(--text-2xl);
+  width: 300px;
+  max-width: 300px;
 }
 
 .owl-demo .login-buttons .button:hover {
-  background-color: var(--accent);
-  color: var(--bg);
-  box-shadow: 0px 0px 15px var(--accent);
+  background-color: var(--bg);
+  color: var(--fg);
 }
 
 .owl-demo .sub-notify-modal {
@@ -338,10 +362,10 @@
 
 .owl-demo .welcome_grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-l);
-  width: 100%;
-  max-width: 900px;
+  grid-template-columns: 1fr 1.4fr;
+  gap: var(--spacing-m);
+  width: 90%;
+  max-width: 1100px;
 }
 
 .owl-demo .welcome_grid .widget_block {
@@ -351,13 +375,47 @@
   height: auto;
   min-height: 0;
   min-width: 0;
+  padding: var(--spacing-l);
   box-sizing: border-box;
 }
 
 .owl-demo .stat_blocks_row {
   grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-m);
+}
+
+.owl-demo .stat_blocks_row .square_block {
+  min-height: 50px;
+  transition: background 0.15s;
+}
+
+.owl-demo .stat_blocks_row .square_block:hover {
+  background-color: var(--bg3);
+}
+
+.owl-demo .dashboard_button {
+  grid-column: 1 / -1;
+  background: var(--bg2);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
   display: flex;
-  gap: var(--spacing-l);
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-m) var(--spacing-l);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  transition: background 0.15s;
+}
+
+.owl-demo .dashboard_button:hover {
+  background: var(--bg3);
 }
 
 .owl-demo .dashboard_grid_cell {
@@ -1538,8 +1596,8 @@
   padding: 0px;
   width: 100%;
   border-radius: var(--border-radius);
-  min-height: 40px;
-  height: 40px;
+  min-height: 60px;
+  height: 60px;
   align-items: center;
   text-align: left;
   align-content: center;
@@ -1590,17 +1648,14 @@
 }
 
 .owl-demo .boards-list {
-  width: 300px;
+  width: 100%;
   height: calc(100% - 60px - 60px - var(--padding-s) - var(--padding-s));
-  padding: var(--padding-s);
   border: 0px solid var(--bg2);
   border-radius: var(--border-radius);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: left;
-  margin-left: var(--spacing-s);
-  margin-right: var(--spacing-s);
   overflow-y: auto;
 }
 
@@ -2065,9 +2120,17 @@
   contain: layout style paint;
 }
 
+.owl-demo .settings_list {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  gap: var(--spacing-m);
+  padding: 0px;
+  margin: 0px;
+}
+
 .owl-demo .settings_content h2 {
-  margin-top: var(--spacing-l);
-  margin-bottom: var(--spacing-l);
   font-size: larger;
 }
 
@@ -2079,6 +2142,7 @@
   justify-content: flex-start;
   text-align: center;
   gap: var(--spacing-m);
+  margin-top: var(--spacing-l);
 }
 
 .owl-demo .tweaks-dialog {
@@ -2391,7 +2455,7 @@
 
 .owl-demo .command-palette {
   position: absolute;
-  top: 10vh;
+  top: 60px;
   left: calc(50% - calc(550px / 2));
   transform: translateX(-50%);
   width: 550px;
@@ -2411,16 +2475,19 @@
 
 .owl-demo #command-input {
   width: 100%;
-  padding: var(--spacing-s) var(--spacing-m);
-  border: 0.5px solid var(--accent);
-  background: var(--bg3);
+  padding: var(--spacing-m);
+  border: 0px solid var(--bg2);
+  background: var(--bg);
   color: var(--fg);
   border-radius: var(--border-radius);
   font-size: var(--text-lg);
   outline: none;
   height: 40px;
   box-sizing: border-box;
-  transition: border-color 0.15s ease;
+  box-shadow: var(--shadow);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.3s ease-in;
 }
 
 .owl-demo #command-input::placeholder {
@@ -2429,13 +2496,13 @@
 }
 
 .owl-demo #command-input:focus {
-  border-color: var(--accent);
+  background-color: var(--bg);
 }
 
 .owl-demo .command-list {
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-s) 0;
+  padding: var(--spacing-m);
   contain: layout style paint;
   display: flex;
   flex-direction: column;
@@ -2453,19 +2520,20 @@
 }
 
 .owl-demo .command-list::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  background: var(--bg3);
+  border-radius: 7px;
 }
 
 .owl-demo .command-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--accent);
 }
 
 .owl-demo .command-section-header {
-  padding: var(--spacing-s) var(--spacing-m);
-  font-size: 11px;
+  padding: var(--spacing-m);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--fg);
+  opacity: 0.5;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -2474,28 +2542,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-s) var(--spacing-m);
-  margin: 0 var(--spacing-xs);
+  padding: var(--spacing-m);
+  margin: 0;
   border-radius: var(--border-radius);
   cursor: pointer;
   background-color: transparent;
-  width: calc(100% - calc(var(--spacing-m) * 2));
+  width: 100%;
   color: var(--fg);
   border: none;
-  font-size: 13px;
+  font-size: var(--text-md);
   text-align: left;
   outline: none;
-  transition: background-color 0.1s ease;
-  min-height: 40px;
+  transition: background-color 0.3s ease;
+  height: 44px;
+  box-sizing: border-box;
 }
 
 .owl-demo .command-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--bg);
 }
 
 .owl-demo .command-item.active {
   background-color: var(--accent);
-  color: var(--bg2);
+  color: var(--bg);
 }
 
 .owl-demo .command-item-content {
@@ -2533,18 +2602,23 @@
 }
 
 .owl-demo .shortcut-key {
-  padding: 5px 10px;
+  padding: 0 var(--spacing-m);
   background: var(--bg);
+  border: 1px solid var(--bg3);
   border-radius: var(--border-radius);
   font-size: var(--text-sm);
   font-family: monospace;
   color: var(--fg);
+  height: 20px;
+  align-items: center;
+  align-content: center;
+  text-align: center;
   line-height: 1;
 }
 
 .owl-demo .command-item.active .shortcut-key {
   background: var(--bg);
-  border-color: var(--bg);
+  border-color: var(--bg3);
   color: var(--fg);
 }
 
@@ -2699,8 +2773,7 @@
   height: 100%;
   box-sizing: border-box;
   background-color: var(--bg2);
-  border: 0px solid var(--bg2);
-  border-radius: var(--border-radius-l);
+  border-radius: var(--border-radius);
   margin: 0px;
   padding: var(--spacing-l);
   display: flex;
@@ -2712,34 +2785,32 @@
   cursor: default;
   user-select: none;
   gap: 0px;
-  box-shadow: var(--shadow);
 }
 
 .owl-demo .square_block .emoji {
-  font-size: 35px;
+  font-size: 40px;
   padding: 0px;
   margin: 0px;
-  width: 100%;
   height: auto;
   text-align: center;
   align-items: center;
   align-content: center;
-  opacity: 0.8;
+  opacity: 0.7;
   font-weight: bolder;
 }
 
 .owl-demo .square_block h1 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   padding: 0px;
   margin: 0px;
   width: 100%;
   text-align: left;
-  font-weight: bolder;
+  font-weight: 700;
 }
 
 .owl-demo .square_block h2 {
-  font-size: var(--text-2xl);
-  font-weight: 1000;
+  font-size: var(--text-xl);
+  font-weight: 700;
   padding: 0px;
   margin: 0px;
   width: 100%;
@@ -2748,14 +2819,14 @@
 }
 
 .owl-demo .square_block h3 {
-  font-size: var(--text-sm);
-  font-weight: light;
+  font-size: var(--text-base);
+  font-weight: 500;
   padding: 0px;
   margin: 0px;
   width: 100%;
   text-align: left;
   text-transform: lowercase;
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .owl-demo .block_icon i {
@@ -3152,18 +3223,11 @@
 
 .owl-demo .widget_block {
   background-color: var(--bg2);
-  border-radius: var(--border-radius-l);
-  height: 150px;
-  width: 150px;
-  max-width: 150px;
-  max-height: 150px;
-  min-width: 150px;
-  min-height: 150px;
-  font-size: large;
+  border-radius: var(--border-radius);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-shadow: var(--shadow);
+  box-sizing: border-box;
   z-index: 1;
 }
 
@@ -3608,16 +3672,14 @@
   align-items: center;
   align-content: center;
   gap: var(--spacing-l);
-  height: 100%;
-  width: 100%;
 }
 
 .owl-demo .account_info_block {
   display: flex;
   flex-direction: column;
   text-align: center;
-  width: 300px;
-  min-width: 300px;
+  width: 400px;
+  min-width: 400px;
   height: 450px;
   min-height: 450px;
   padding: var(--spacing-l);
@@ -3633,7 +3695,7 @@
 .owl-demo .latency-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--surface-card);
+  background: var(--bg2);
   border-radius: var(--border-radius);
   overflow: hidden;
 }
@@ -3657,8 +3719,13 @@
   color: var(--accent);
 }
 
+.owl-demo .latency-table tbody tr {
+  transition: background-color 0.1s ease;
+}
+
+.owl-demo .latency-table tbody tr:hover,
 .owl-demo .latency-table tr:hover {
-  background: var(--bg2);
+  background-color: var(--bg);
 }
 
 @media screen and (max-width: 900px) {
@@ -3958,7 +4025,7 @@
 
 .owl-demo .subs-card {
   all: unset;
-  flex: 1 1 260px;
+  flex: 1 1 300px;
   background: var(--bg2);
   border-radius: var(--border-radius-l);
   padding: var(--spacing-l);
@@ -4021,13 +4088,14 @@
 
 .owl-demo .stats_grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(6, 100px);
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(6, 80px);
+  grid-auto-rows: 80px;
   padding: 0px;
   margin: 0px;
   gap: var(--spacing-s);
-  width: 100%;
-  max-width: 600px;
+  width: 90%;
+  max-width: 1100px;
 }
 
 .owl-demo .stats_grid > * {
@@ -4036,21 +4104,39 @@
 }
 
 .owl-demo .grid-tasks-chart {
-  grid-column: span 2;
-  grid-row: span 2;
+  grid-column: 1/-2;
+  grid-row: span 3;
+  background-color: var(--bg2);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-l);
+  box-sizing: border-box;
 }
 
 .owl-demo .grid-tasks-chart .tasks_chart {
   height: 100%;
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 .owl-demo .grid-projects-chart {
-  grid-row: span 2;
+  grid-row: span 3;
 }
 
 .owl-demo .grid-projects-chart .projects_chart {
   height: 100%;
+  padding: var(--spacing-xl);
   box-sizing: border-box;
+}
+
+.owl-demo .stats_grid .activity-graph {
+  grid-column: 1 / -1;
+  grid-row: span 3;
+  padding: var(--spacing-l);
 }
 
 .owl-demo .stats_content > * {

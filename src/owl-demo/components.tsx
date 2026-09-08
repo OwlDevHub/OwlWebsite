@@ -1,4 +1,4 @@
-import { type ReactElement, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type ReactElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Chart from "chart.js/auto";
@@ -49,7 +49,21 @@ const defaultColors = [
 ];
 
 function getTextColorForBg(bg: string): string {
-  return defaultColors.includes(bg) ? "var(--bg)" : "var(--fg)";
+  if (defaultColors.includes(bg)) return "var(--bg)";
+  // invertBrightnessCssVarForText() from utils/hex.ts of the app (simplified
+  // for the demo: no getComputedStyle cache, WCAG luminance inline)
+  const m = /^#?([0-9a-fA-F]{6})$/.exec(bg.trim());
+  if (m) {
+    const r = parseInt(m[1].slice(0, 2), 16) / 255;
+    const g = parseInt(m[1].slice(2, 4), 16) / 255;
+    const b = parseInt(m[1].slice(4, 6), 16) / 255;
+    const lum = (...cs: number[]) => {
+      const [rr, gg, bb] = cs.map((c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)));
+      return 0.2126 * rr + 0.7152 * gg + 0.0722 * bb;
+    };
+    return lum(r, g, b) > 0.4 ? "var(--bg)" : "var(--fg)";
+  }
+  return "var(--fg)";
 }
 
 const fmtDate = (iso: string): string =>
@@ -67,13 +81,15 @@ const CircularProgressBar: React.FC<{
   strokeWidth?: number;
   trackColor?: string;
   progressColor?: string;
+  className?: string;
   style?: React.CSSProperties;
 }> = ({
   progress = 0,
   size = 160,
   strokeWidth = 12,
-  trackColor = "var(--bg3)",
+  trackColor = "var(--bg)",
   progressColor = "var(--accent)",
+  className,
   style,
 }) => {
   const normalizedProgress = Math.min(Math.max(progress, 0), 100);
@@ -86,6 +102,7 @@ const CircularProgressBar: React.FC<{
       height={size}
       viewBox={`0 0 ${size} ${size}`}
       style={{ transform: "rotate(-90deg)", ...style }}
+      className={className}
     >
       <circle
         r={radius}
@@ -149,13 +166,12 @@ const PomodoroModal: React.FC<{
         borderRadius: "var(--spacing-xl)",
         padding: "var(--spacing-l)",
         width: "500px",
-        height: "180px",
         marginTop: "60px",
         boxShadow: "var(--shadow-l)",
         position: "fixed",
         top: "0px",
         flexDirection: "row",
-        left: "calc(50% - 250px - var(--spacing-s) - var(--spacing-s))",
+        left: "calc(50vw - 250px - var(--spacing-s) - var(--spacing-s))",
         zIndex: 100,
         cursor: "auto",
         gap: "10%",
@@ -366,7 +382,7 @@ const DemoPomodoroTimer: React.FC = () => {
             backgroundColor: "transparent",
             backdropFilter: "blur(10px)",
             borderRadius: "var(--spacing-l)",
-            height: "30px",
+            height: "40px",
             width: "auto",
             cursor: "pointer",
             position: "relative",
@@ -434,13 +450,9 @@ const NavButton: React.FC<{
     className={`navigate_button centered_content ${isActive ? "active" : ""}`}
     onClick={() => onTabChange(id)}
     style={{
-      border: isActive ? "4px solid var(--accent)" : "4px solid transparent",
-      backdropFilter: isActive ? "var(--bg-filter)" : "none",
       height: "45px",
       width: isActive ? "90px" : "45px",
-      ...(isActive
-        ? { backgroundColor: "var(--accent-disabled)", color: "var(--accent)" }
-        : {}),
+      ...(isActive ? { backgroundColor: "var(--accent)", color: "var(--bg)" } : {}),
     }}
   >
     <i className={`fa-solid ${icon}`}></i>
@@ -535,10 +547,11 @@ const TimeBlock: React.FC = () => {
   return (
     <h1
       style={{
-        fontSize: "1.5rem",
-        fontWeight: "bolder",
+        fontSize: "var(--text-5xl)",
+        fontWeight: 700,
         padding: "0px",
         margin: "0px",
+        letterSpacing: "-0.02em",
       }}
     >
       {time}
@@ -566,10 +579,9 @@ const DateBlock: React.FC = () => {
       className="widget_block"
       id="date_block"
       style={{
-        padding: "32px",
         margin: "0px",
         zIndex: "50",
-        minHeight: "150px",
+        minHeight: "120px",
       }}
     >
       <div
@@ -577,7 +589,8 @@ const DateBlock: React.FC = () => {
           display: "flex",
           flexDirection: "row",
           height: "100%",
-          gap: "var(--spacing-xl)",
+          gap: "var(--spacing-l)",
+          alignItems: "center",
         }}
       >
         <div
@@ -585,27 +598,32 @@ const DateBlock: React.FC = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            width: 80,
+            height: 80,
+            borderRadius: "var(--border-radius)",
+            backgroundColor: "var(--accent)",
+            flexShrink: 0,
           }}
         >
-          <h1
+          <span
             style={{
-              fontSize: "5rem",
+              fontSize: "var(--text-5xl)",
               padding: "0px",
               margin: "0px",
-              color: "var(--accent)",
-              fontWeight: "bolder",
+              color: "var(--bg)",
+              fontWeight: "800",
               lineHeight: 1,
             }}
           >
             {date.day}
-          </h1>
+          </span>
         </div>
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            gap: "var(--spacing-s)",
+            gap: "2px",
             textAlign: "left",
           }}
         >
@@ -619,30 +637,8 @@ const DateBlock: React.FC = () => {
               textAlign: "left",
             }}
           >
-            <h2
-              style={{
-                textAlign: "left",
-                padding: "0px",
-                margin: "0px",
-                fontSize: "medium",
-                fontWeight: "normal",
-                opacity: 0.7,
-              }}
-            >
-              {date.weekday}
-            </h2>
-            <h2
-              style={{
-                textAlign: "left",
-                padding: "0px",
-                margin: "0px",
-                fontSize: "medium",
-                fontWeight: "normal",
-                opacity: 0.7,
-              }}
-            >
-              {date.month}
-            </h2>
+            <span style={{ fontSize: "var(--text-md)", opacity: 0.6 }}>{date.weekday}</span>
+            <span style={{ fontSize: "var(--text-md)", opacity: 0.6 }}>{date.month}</span>
           </div>
         </div>
       </div>
@@ -999,7 +995,6 @@ const CalendarWidget: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => 
     className="widget_block"
     id="calendar-widget"
     style={{
-      padding: "var(--spacing-xl)",
       margin: "0px",
       justifyContent: "flex-start",
       alignItems: "center",
@@ -1008,7 +1003,6 @@ const CalendarWidget: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => 
       position: "relative",
       gridColumn: 2,
       gridRow: "1 / span 2",
-      boxSizing: "border-box",
     }}
   >
     <Calendar tasks={tasks} />
@@ -1022,23 +1016,26 @@ const QuoteWidget: React.FC = () => {
   };
   return (
     <div
-      className="centered_content widget_block quote-widget"
-      style={{ padding: "var(--spacing-xl)", minHeight: "150px" }}
+      className="widget_block quote-widget"
+      style={{
+        minHeight: "120px",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
       <div
         style={{
           fontStyle: "italic",
-          marginBottom: "8px",
-          lineHeight: "1.4",
+          lineHeight: "1.5",
           flex: "1",
-          fontWeight: "bolder",
+          fontSize: "var(--text-base)",
+          opacity: 0.9,
         }}
       >
         {quote.content}
       </div>
-      <div style={{ fontSize: "small", opacity: 0.7 }}>
-        {" "}
-        ~ {quote.author} ~{" "}
+      <div style={{ fontSize: "var(--text-base)", opacity: 0.4, marginTop: "var(--spacing-s)", fontWeight: 600 }}>
+        {quote.author}
       </div>
     </div>
   );
@@ -1085,7 +1082,9 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
     setTooltipCoords({ left, top });
   }, [hoveredCell]);
 
-  useEffect(() => repositionTooltip(), [repositionTooltip]);
+  useLayoutEffect(() => {
+    repositionTooltip();
+  }, [repositionTooltip]);
 
   const CELL_SIZE = 13;
   const CELL_GAP = 5;
@@ -1251,13 +1250,9 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
 
 /* -------------------------- Statistics (Blocks) ------------------------------ */
 
-const BlockIcon: React.FC<{ iconClass: string; color: string }> = ({
-  iconClass,
-  color,
-}) => (
+const BlockIcon: React.FC<{ iconClass: string; color: string }> = ({ iconClass, color }) => (
   <div
     style={{
-      width: "100%",
       height: "100%",
       minHeight: "0px",
       padding: "0px",
@@ -1273,14 +1268,8 @@ const BlockIcon: React.FC<{ iconClass: string; color: string }> = ({
       className={`emoji ${iconClass}`}
       style={{
         color,
-        fontWeight: "bolder",
-        fontSize: "28px",
         opacity: 0.7,
-        alignContent: "right",
-        alignItems: "right",
-        justifyContent: "center",
-        textAlign: "right",
-        width: "100%",
+        fontWeight: "bolder",
       }}
     />
   </div>
@@ -1451,16 +1440,18 @@ const DeadlineProjectsBlock: React.FC = () => {
 const TasksChartBlock: React.FC = () => {
   const ref = useRef<HTMLCanvasElement | null>(null);
   const instance = useRef<Chart | null>(null);
+  // YYYY-MM-DD labels like getLastNDates() in Charts/TasksChart.tsx of the app
   const labels: string[] = [];
   const now = new Date();
   for (let i = 6; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
-    labels.push(
-      `${d.toLocaleDateString("en-US", { month: "short" })} ${d.getDate()}`,
-    );
+    labels.push(d.toISOString().split("T")[0]);
   }
   const counts = [3, 5, 4, 7, 6, 9, 8];
+  // #f0ede8 == var(--fg), #1e1f1a == var(--bg3): Chart.js needs resolved
+  // colors (cssvar() reads :root, but the demo tokens live under .owl-demo)
+  const lineColor = "#f0ede8";
 
   useEffect(() => {
     const ctx = ref.current?.getContext("2d");
@@ -1474,14 +1465,11 @@ const TasksChartBlock: React.FC = () => {
           {
             label: "Completed tasks",
             data: counts,
-            borderColor: "#f0ede8",
-            backgroundColor: "#f0ede8",
-            borderWidth: 3,
+            borderColor: lineColor,
+            borderWidth: 5,
             tension: 0.5,
-            pointRadius: 4,
-            pointBackgroundColor: "#e0c17c",
-            pointBorderColor: "#f0ede8",
-            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointBackgroundColor: lineColor,
           },
         ],
       },
@@ -1489,10 +1477,32 @@ const TasksChartBlock: React.FC = () => {
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
-        plugins: { legend: { display: false } },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            titleFont: { size: 16, weight: "bold" },
+            bodyFont: { size: 16 },
+            footerFont: { size: 16 },
+            backgroundColor: "#1e1f1a",
+            borderColor: "#1e1f1a",
+            borderWidth: 0,
+            padding: 8,
+          },
+        },
         scales: {
-          y: { display: false, beginAtZero: true, grid: { display: false } },
-          x: { display: false, grid: { display: false } },
+          y: {
+            display: false,
+            beginAtZero: true,
+            title: { display: false },
+            ticks: { display: false },
+            grid: { display: false },
+          },
+          x: {
+            display: false,
+            title: { display: false },
+            ticks: { display: false },
+            grid: { display: false },
+          },
         },
       },
     });
@@ -1511,8 +1521,11 @@ const TasksChartBlock: React.FC = () => {
 const ProjectsChartBlock: React.FC = () => {
   const ref = useRef<HTMLCanvasElement | null>(null);
   const instance = useRef<Chart | null>(null);
+  // Resolved dark.css values (Chart.js needs real colors, not var()):
+  // Completed=--green #c9b27c, In Progress=--blue #7cb8c9,
+  // On Hold=--yellow #e0c17c, Planned=--purple #a68fc9
   const data = [
-    { label: "Completed", count: 9, color: "#7cc98b" },
+    { label: "Completed", count: 9, color: "#c9b27c" },
     { label: "In Progress", count: 4, color: "#7cb8c9" },
     { label: "On Hold", count: 2, color: "#e0c17c" },
     { label: "Planned", count: 3, color: "#a68fc9" },
@@ -1528,21 +1541,47 @@ const ProjectsChartBlock: React.FC = () => {
         labels: data.map((d) => d.label),
         datasets: [
           {
+            label: "Projects by Status",
             data: data.map((d) => d.count),
             backgroundColor: data.map((d) => d.color),
-            borderColor: "#1b1913",
-            borderWidth: 3,
-            borderRadius: 6,
-            spacing: 3,
+            borderColor: data.map((d) => d.color),
+            borderWidth: 0,
+            borderRadius: 15,
+            spacing: 5,
           },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: "64%",
         animation: false,
-        plugins: { legend: { display: false } },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            titleFont: { size: 16, weight: "bold" },
+            bodyFont: { size: 16 },
+            footerFont: { size: 16 },
+            backgroundColor: "#1e1f1a",
+            borderColor: "#1e1f1a",
+            borderWidth: 0,
+            padding: 20,
+          },
+        },
+        scales: {
+          y: {
+            display: false,
+            beginAtZero: true,
+            title: { display: false },
+            ticks: { display: false },
+            grid: { display: false },
+          },
+          x: {
+            display: false,
+            title: { display: false },
+            ticks: { display: false },
+            grid: { display: false },
+          },
+        },
       },
     });
     return () => {
@@ -1579,7 +1618,7 @@ const WelcomeTab: React.FC = () => {
       className="centered_content"
       id="main_tab"
       style={{
-        gap: "var(--spacing-xl)",
+        gap: "var(--spacing-l)",
         height: "100%",
         width: "auto",
         padding: "var(--spacing-l)",
@@ -1608,6 +1647,7 @@ interface DemoTask {
   content: string;
   completed: boolean;
   deadline?: string;
+  color?: string;
 }
 
 interface DemoColumn {
@@ -2146,7 +2186,7 @@ const TaskList: React.FC<{
           key={task.id}
           task={task}
           columnId={column.id}
-          color="var(--bg2)"
+          color={task.color || "var(--bg2)"}
           onToggleTask={onToggleTask}
           onOpen={onOpen}
           onDragStart={(e) => {
@@ -2199,10 +2239,7 @@ const BoardsHeader: React.FC<{
   onCreateNewBoard: () => void;
   onToggleList: () => void;
 }> = ({ onCreateNewBoard, onToggleList }) => (
-  <div
-    className="boards-list-header"
-    style={{ height: "40px", minHeight: "40px", width: "100%" }}
-  >
+  <div className="boards-list-header" style={{ width: "100%" }}>
     <h3>BOARDS</h3>
     <div
       style={{
@@ -2260,7 +2297,7 @@ const BoardElement: React.FC<{
       margin: "5px 0",
       borderRadius: "var(--border-radius)",
       outline: "none",
-      width: "calc(100% - var(--spacing-s))",
+      width: "calc(100% - var(--spacing-s) - var(--spacing-s))",
       padding: "0 0 0 var(--spacing-s)",
       height: "40px",
       display: "flex",
@@ -2779,9 +2816,6 @@ const TasksTab: React.FC = () => {
                     />
                   ))}
                 </div>
-                <button className="menu_button" style={{ marginTop: "var(--spacing-m)" }} onClick={createNewBoard}>
-                  <i className="fa-solid fa-plus"></i> New board
-                </button>
               </motion.div>
             </motion.div>
           )}
@@ -3745,7 +3779,7 @@ const ProjectMembersModal: React.FC<{
       <motion.div
         className="project-modal-content"
         ref={contentRef}
-        style={{ width: "calc(80% - var(--spacing-xxl) - var(--spacing-xxl))", justifyContent: "flex-start" }}
+        style={{ width: "calc(90% - var(--spacing-xxl) - var(--spacing-xxl))", justifyContent: "flex-start" }}
         initial={{ opacity: 0, y: -200 }}
         exit={{ opacity: 0, y: -200 }}
         animate={{ opacity: 1, y: 0 }}
@@ -3767,7 +3801,6 @@ const ProjectMembersModal: React.FC<{
               padding: "var(--spacing-m)",
               backgroundColor: "var(--red)",
               borderRadius: "var(--border-radius)",
-              marginBottom: "var(--spacing-m)",
             }}
           >
             {error}
@@ -3789,8 +3822,8 @@ const ProjectMembersModal: React.FC<{
                   value={memberSearch}
                   onChange={(e) => setMemberSearch(e.target.value)}
                   style={{
-                    width: "calc(100% - calc(var(--spacing-l) + var(--spacing-s)))",
-                    paddingLeft: "calc(var(--spacing-l) + var(--spacing-s))",
+                    width: "calc(100% - (var(--spacing-l) - var(--spacing-s)))",
+                    paddingLeft: "calc(var(--spacing-xl) + var(--spacing-s))",
                   }}
                 />
               </div>
@@ -3868,7 +3901,7 @@ const ProjectMembersModal: React.FC<{
                         <span
                           className="button"
                           style={{
-                            width: "80px",
+                            width: "150px",
                             fontWeight: "bolder",
                             display: "flex",
                             flexDirection: "column",
@@ -3900,7 +3933,24 @@ const ProjectMembersModal: React.FC<{
               Public users{" "}
               <span style={{ color: "var(--fg-secondary)", fontWeight: 400 }}>({availablePublicUsers.length})</span>
             </p>
-
+            <div style={{ display: "flex", flexDirection: "row", gap: "var(--spacing-m)", width: "calc(100% - var(--padding-s))" }}>
+              <DemoInputField
+                label="Member email"
+                value={newEmail}
+                name="email"
+                type="email"
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
+              <button
+                className="button"
+                id="green"
+                onClick={handleAddMember}
+                disabled={!isCurrentUserOwner() || !newEmail.trim()}
+                style={{ width: "130px" }}
+              >
+                <i className="fa-solid fa-plus"></i> Add
+              </button>
+            </div>
             {availablePublicUsers.length === 0 ? (
               <div style={{ textAlign: "center", padding: "var(--spacing-l)", color: "var(--fg-secondary)" }}>
                 No public users
@@ -3913,9 +3963,9 @@ const ProjectMembersModal: React.FC<{
                     placeholder="Search public users"
                     value={publicSearch}
                     onChange={(e) => setPublicSearch(e.target.value)}
-style={{
-                      width: "calc(100% - calc(var(--spacing-l) + var(--spacing-s)))",
-                      paddingLeft: "calc(var(--spacing-l) + var(--spacing-s))",
+                    style={{
+                      width: "calc(100% - calc(var(--spacing-l) - var(--spacing-s)))",
+                      paddingLeft: "calc(var(--spacing-xl) + var(--spacing-s))",
                     }}
                   />
                 </div>
@@ -3992,25 +4042,6 @@ style={{
                 )}
               </div>
             )}
-
-            <div style={{ display: "flex", flexDirection: "row", gap: "var(--spacing-m)", width: "100%" }}>
-              <DemoInputField
-                label="Member email"
-                value={newEmail}
-                name="email"
-                type="email"
-                onChange={(e) => setNewEmail(e.target.value)}
-              />
-              <button
-                className="button"
-                id="green"
-                onClick={handleAddMember}
-                disabled={!isCurrentUserOwner() || !newEmail.trim()}
-                style={{ width: "130px" }}
-              >
-                <i className="fa-solid fa-plus"></i> Add
-              </button>
-            </div>
           </div>
         </div>
 
@@ -4090,7 +4121,7 @@ const ProjectModal: React.FC<{
       <motion.div
         className="project-modal-content"
         ref={contentRef}
-        style={{ width: "calc(80% - var(--spacing-xxl) - var(--spacing-xxl))" }}
+        style={{ width: "calc(90% - var(--spacing-xxl) - var(--spacing-xxl))" }}
         initial={{ opacity: 0, y: -200 }}
         exit={{ opacity: 0, y: -200 }}
         animate={{ opacity: 1, y: 0 }}
@@ -4226,7 +4257,7 @@ const ProjectModal: React.FC<{
             <div className="project_card_members">
               {members.length > 0 ? (
                 <>
-                  {members.slice(0, 5).map((member, i) => (
+                  {members.map((member, i) => (
                     <div
                       key={member.user_id}
                       title={member.name || member.email}
@@ -4240,25 +4271,6 @@ const ProjectModal: React.FC<{
                       {getMemberInitial(member)}
                     </div>
                   ))}
-                  {members.length > 5 && (
-                    <div
-                      className="project_card_avatar"
-                      style={{
-                        backgroundColor: "var(--bg-secondary)",
-                        margin: "0px",
-                        padding: "0px",
-                        zIndex: 0,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontWeight: "bold",
-                        fontSize: "var(--text-xxl)",
-                        color: "var(--fg-secondary)",
-                      }}
-                    >
-                      +{members.length - 5}
-                    </div>
-                  )}
                 </>
               ) : (
                 <span style={{ fontSize: "var(--text-sm)", color: "var(--fg-secondary)" }}>No members</span>
@@ -4353,7 +4365,7 @@ const ProjectsTab: React.FC = () => {
     const sortedDev = [...projects].sort((a, b) => {
       let comparison = 0;
       if (sortBy === "status") {
-        const statusOrder = ["Planned", "In Progress", "Completed"];
+        const statusOrder = ["Planned", "In Progress", "On Hold", "Completed", "Cancelled"];
         comparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
       } else if (sortBy === "priority") {
         const priorityOrder = ["low", "medium", "high"];
@@ -4637,6 +4649,7 @@ const AccountControl: React.FC<{ onOpenSubPlan: () => void }> = ({ onOpenSubPlan
       justifyContent: "center",
       backgroundColor: "var(--bg2)",
       width: "100%",
+      boxSizing: "border-box",
       borderRadius: "var(--border-radius-l)",
       padding: "var(--spacing-l)",
     }}
@@ -4715,7 +4728,7 @@ const SettingsTab: React.FC = () => (
     <div className="settings_content">
       <div className="inner-container">
         <div style={{ width: "100%", maxWidth: "600px" }}>
-          <div>
+          <div className="settings_list">
             <h2 className="settings_block_title">
               <i className="fa-solid fa-user"></i> Account
             </h2>
@@ -4726,7 +4739,7 @@ const SettingsTab: React.FC = () => (
               <input id="public_account_checkbox" type="checkbox" className="checkbox" defaultChecked />
             </div>
           </div>
-          <div>
+          <div className="settings_list">
             <h2 className="settings_block_title">
               <i className="fa-solid fa-swatchbook"></i> Appearance
             </h2>
@@ -4757,7 +4770,7 @@ const SettingsTab: React.FC = () => (
               </select>
             </div>
           </div>
-          <div>
+          <div className="settings_list">
             <h2 className="settings_block_title">
               <i className="fa-solid fa-gears"></i> General
             </h2>
@@ -4786,7 +4799,7 @@ const SettingsTab: React.FC = () => (
               <input id="animations_checkbox" type="checkbox" className="checkbox" defaultChecked />
             </div>
           </div>
-          <div>
+          <div className="settings_list">
             <h2 className="settings_block_title">
               <i className="fa-solid fa-clock"></i> Pomodoro
             </h2>
@@ -4803,7 +4816,7 @@ const SettingsTab: React.FC = () => (
               <input type="number" defaultValue={5} style={{ width: "100%" }} min="1" />
             </div>
           </div>
-          <div>
+          <div className="settings_list">
             <h2 className="settings_block_title">
               <i className="fa-solid fa-clock"></i> Contacts
             </h2>
@@ -4816,7 +4829,7 @@ const SettingsTab: React.FC = () => (
               </button>
             </div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-s)" }}>
+          <div className="settings_list">
             <h2 className="settings_block_title">
               <i className="fa-solid fa-rotate"></i> Updates
             </h2>

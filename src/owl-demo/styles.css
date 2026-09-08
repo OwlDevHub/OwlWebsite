@@ -127,16 +127,16 @@
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 12px;
-  --spacing-xs: 5px;
-  --spacing-s: 10px;
-  --spacing-m: 15px;
-  --spacing-l: 20px;
-  --spacing-xl: 30px;
+  --spacing-xs: 3px;
+  --spacing-s: 8px;
+  --spacing-m: 12px;
+  --spacing-l: 16px;
+  --spacing-xl: 25px;
   --spacing-xxl: 50px;
   --page-margin: 40px;
   --padding-s: var(--spacing-s);
-  --text-xs: 0.7rem;
-  --text-sm: 0.8rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
   --text-base: 0.9rem;
   --text-md: 0.95rem;
   --text-lg: 1rem;
@@ -144,6 +144,7 @@
   --text-2xl: 1.2rem;
   --text-3xl: 1.5rem;
   --text-4xl: 1.6rem;
+  --text-5xl: 2.2rem;
 
   position: relative;
   width: calc(100% / 0.55);
