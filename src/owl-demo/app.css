@@ -1619,12 +1619,13 @@
 }
 
 .owl-demo .board-element {
-  padding: var(--padding-s);
+  padding: 0;
   margin: 0px;
   border-radius: var(--border-radius);
   margin-top: var(--spacing-s);
   height: 20px;
-  width: auto;
+  min-width: 0px;
+  max-width: auto;
   background-color: transparent;
   border: none;
   color: var(--fg);
@@ -4176,7 +4177,10 @@
   position: relative;
 }
 
-.owl-demo .markdown_editor .milkdown .ProseMirror.is-empty[data-placeholder]::before {
+.owl-demo
+  .markdown_editor
+  .milkdown
+  .ProseMirror.is-empty[data-placeholder]::before {
   content: attr(data-placeholder);
   position: absolute;
   top: var(--spacing-s);
@@ -4192,11 +4196,20 @@
   position: relative;
 }
 
-.owl-demo .markdown_editor .milkdown .ProseMirror li[data-item-type="task"] > p {
+.owl-demo
+  .markdown_editor
+  .milkdown
+  .ProseMirror
+  li[data-item-type="task"]
+  > p {
   margin-left: var(--spacing-l);
 }
 
-.owl-demo .markdown_editor .milkdown .ProseMirror li[data-item-type="task"]::before {
+.owl-demo
+  .markdown_editor
+  .milkdown
+  .ProseMirror
+  li[data-item-type="task"]::before {
   content: "";
   position: absolute;
   left: 0;
@@ -4208,12 +4221,20 @@
   background-color: transparent;
 }
 
-.owl-demo .markdown_editor .milkdown .ProseMirror li[data-item-type="task"][data-checked="true"]::before {
+.owl-demo
+  .markdown_editor
+  .milkdown
+  .ProseMirror
+  li[data-item-type="task"][data-checked="true"]::before {
   background-color: var(--green);
   border-color: var(--green);
 }
 
-.owl-demo .markdown_editor .milkdown .ProseMirror li[data-item-type="task"][data-checked="true"]::after {
+.owl-demo
+  .markdown_editor
+  .milkdown
+  .ProseMirror
+  li[data-item-type="task"][data-checked="true"]::after {
   content: "✓";
   position: absolute;
   left: 0.15em;

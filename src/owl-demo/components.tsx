@@ -1,4 +1,12 @@
-import { type ReactElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Chart from "chart.js/auto";
@@ -58,7 +66,9 @@ function getTextColorForBg(bg: string): string {
     const g = parseInt(m[1].slice(2, 4), 16) / 255;
     const b = parseInt(m[1].slice(4, 6), 16) / 255;
     const lum = (...cs: number[]) => {
-      const [rr, gg, bb] = cs.map((c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)));
+      const [rr, gg, bb] = cs.map((c) =>
+        c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4),
+      );
       return 0.2126 * rr + 0.7152 * gg + 0.0722 * bb;
     };
     return lum(r, g, b) > 0.4 ? "var(--bg)" : "var(--fg)";
@@ -259,7 +269,14 @@ const PomodoroModal: React.FC<{
           </div>
         </div>
       </div>
-      <div style={{ gap: "0px", position: "relative", width: "180px", height: "180px" }}>
+      <div
+        style={{
+          gap: "0px",
+          position: "relative",
+          width: "180px",
+          height: "180px",
+        }}
+      >
         <CircularProgressBar
           progress={progress}
           size={180}
@@ -401,7 +418,9 @@ const DemoPomodoroTimer: React.FC = () => {
             strokeWidth={5}
             trackColor="var(--bg)"
             progressColor={isWorking ? "var(--red)" : "var(--green)"}
-            progress={(timeLeft / ((isWorking ? workTime : breakTime) * 60)) * 100}
+            progress={
+              (timeLeft / ((isWorking ? workTime : breakTime) * 60)) * 100
+            }
           />
           <span style={{ zIndex: 1 }}>
             {isWorking ? "Work" : "Break"} {formatTime(timeLeft)}
@@ -452,7 +471,9 @@ const NavButton: React.FC<{
     style={{
       height: "45px",
       width: isActive ? "90px" : "45px",
-      ...(isActive ? { backgroundColor: "var(--accent)", color: "var(--bg)" } : {}),
+      ...(isActive
+        ? { backgroundColor: "var(--accent)", color: "var(--bg)" }
+        : {}),
     }}
   >
     <i className={`fa-solid ${icon}`}></i>
@@ -637,8 +658,12 @@ const DateBlock: React.FC = () => {
               textAlign: "left",
             }}
           >
-            <span style={{ fontSize: "var(--text-md)", opacity: 0.6 }}>{date.weekday}</span>
-            <span style={{ fontSize: "var(--text-md)", opacity: 0.6 }}>{date.month}</span>
+            <span style={{ fontSize: "var(--text-md)", opacity: 0.6 }}>
+              {date.weekday}
+            </span>
+            <span style={{ fontSize: "var(--text-md)", opacity: 0.6 }}>
+              {date.month}
+            </span>
           </div>
         </div>
       </div>
@@ -659,7 +684,10 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [clickedDay, setClickedDay] = useState<number | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const monthNames = [
@@ -689,16 +717,26 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
   ).getDay();
 
   const handlePrevMonth = () =>
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1),
+    );
   const handleNextMonth = () =>
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1),
+    );
   const handlePrevYear = () =>
-    setCurrentDate(new Date(currentDate.getFullYear() - 1, currentDate.getMonth()));
+    setCurrentDate(
+      new Date(currentDate.getFullYear() - 1, currentDate.getMonth()),
+    );
   const handleNextYear = () =>
-    setCurrentDate(new Date(currentDate.getFullYear() + 1, currentDate.getMonth()));
+    setCurrentDate(
+      new Date(currentDate.getFullYear() + 1, currentDate.getMonth()),
+    );
 
   const handleDateClick = (day: number) =>
-    setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
+    setSelectedDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth(), day),
+    );
 
   const renderWeekdayHeaders = () =>
     weekDays.map((d, i) => (
@@ -758,7 +796,8 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
         day === new Date().getDate() &&
         currentDate.getMonth() === new Date().getMonth() &&
         currentDate.getFullYear() === new Date().getFullYear();
-      const backgroundColor = isSelected || isToday ? "var(--accent)" : "transparent";
+      const backgroundColor =
+        isSelected || isToday ? "var(--accent)" : "transparent";
       const textColor = isSelected || isToday ? "var(--bg)" : "var(--fg)";
       return (
         <button
@@ -772,7 +811,8 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
               handleDateClick(day);
               if (!containerRef.current) return;
               const rect = e.currentTarget.getBoundingClientRect();
-              const containerRect = containerRef.current.getBoundingClientRect();
+              const containerRect =
+                containerRef.current.getBoundingClientRect();
               setClickedDay(day);
               setTooltipPosition({
                 x: rect.left - containerRect.left,
@@ -806,7 +846,10 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setClickedDay(null);
         setTooltipPosition(null);
         setSelectedDate(null);
@@ -960,11 +1003,20 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
             gap: "var(--spacing-s)",
           }}
         >
-          <div style={{ fontWeight: 700, fontSize: "var(--text-md)", marginBottom: "2px" }}>
-            {clickedDay} {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: "var(--text-md)",
+              marginBottom: "2px",
+            }}
+          >
+            {clickedDay} {monthNames[currentDate.getMonth()]}{" "}
+            {currentDate.getFullYear()}
           </div>
           {getTasksForDay(clickedDay).length === 0 ? (
-            <div style={{ opacity: 0.4, fontSize: "var(--text-xs)" }}>No tasks</div>
+            <div style={{ opacity: 0.4, fontSize: "var(--text-xs)" }}>
+              No tasks
+            </div>
           ) : (
             getTasksForDay(clickedDay).map((task) => (
               <div
@@ -979,7 +1031,12 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
                   fontSize: "var(--text-md)",
                 }}
               >
-                <input type="checkbox" className="checkbox" checked={task.completed} readOnly />
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={task.completed}
+                  readOnly
+                />
                 {task.content}
               </div>
             ))
@@ -990,7 +1047,9 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
   );
 };
 
-const CalendarWidget: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => (
+const CalendarWidget: React.FC<{ tasks?: DemoCalendarTask[] }> = ({
+  tasks,
+}) => (
   <div
     className="widget_block"
     id="calendar-widget"
@@ -1034,7 +1093,14 @@ const QuoteWidget: React.FC = () => {
       >
         {quote.content}
       </div>
-      <div style={{ fontSize: "var(--text-base)", opacity: 0.4, marginTop: "var(--spacing-s)", fontWeight: 600 }}>
+      <div
+        style={{
+          fontSize: "var(--text-base)",
+          opacity: 0.4,
+          marginTop: "var(--spacing-s)",
+          fontWeight: 600,
+        }}
+      >
         {quote.author}
       </div>
     </div>
@@ -1065,8 +1131,16 @@ function buildDemoActivityCounts(): Map<string, number> {
 const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
   activityCounts,
 }) => {
-  const [hoveredCell, setHoveredCell] = useState<{ date: string; count: number; x: number; y: number } | null>(null);
-  const [tooltipCoords, setTooltipCoords] = useState<{ left: number; top: number } | null>(null);
+  const [hoveredCell, setHoveredCell] = useState<{
+    date: string;
+    count: number;
+    x: number;
+    y: number;
+  } | null>(null);
+  const [tooltipCoords, setTooltipCoords] = useState<{
+    left: number;
+    top: number;
+  } | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const repositionTooltip = useCallback(() => {
@@ -1075,7 +1149,13 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
     const margin = 10;
     const tipWidth = tipRect?.width ?? 0;
     const tipHeight = tipRect?.height ?? 0;
-    const left = Math.max(margin, Math.min(hoveredCell.x - tipWidth / 2, window.innerWidth - tipWidth - margin));
+    const left = Math.max(
+      margin,
+      Math.min(
+        hoveredCell.x - tipWidth / 2,
+        window.innerWidth - tipWidth - margin,
+      ),
+    );
     let top = hoveredCell.y - tipHeight - margin;
     if (top < margin) top = hoveredCell.y + margin;
     top = Math.min(top, window.innerHeight - tipHeight - margin);
@@ -1122,7 +1202,10 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
     if (firstDay) {
       const month = firstDay.getMonth();
       if (month !== lastMonth) {
-        monthLabels.push({ label: firstDay.toLocaleString("en-US", { month: "short" }), weekIndex: i });
+        monthLabels.push({
+          label: firstDay.toLocaleString("en-US", { month: "short" }),
+          weekIndex: i,
+        });
         lastMonth = month;
       }
     }
@@ -1140,7 +1223,15 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
         position: "relative",
       }}
     >
-      <div style={{ overflowX: "auto", overflowY: "hidden", width: "100%", display: "flex", justifyContent: "center" }}>
+      <div
+        style={{
+          overflowX: "auto",
+          overflowY: "hidden",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <div
           style={{
             display: "grid",
@@ -1185,7 +1276,9 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
           ))}
           {weeks.map((week, wi) =>
             week.map((day, di) => {
-              const isToday = day.date.toLocaleDateString("en-CA") === today.toLocaleDateString("en-CA");
+              const isToday =
+                day.date.toLocaleDateString("en-CA") ===
+                today.toLocaleDateString("en-CA");
               return (
                 <div
                   key={`${wi}-${di}`}
@@ -1203,9 +1296,15 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
                     outlineOffset: 1,
                   }}
                   onMouseEnter={(e) => {
-                    const rect = (e.target as HTMLElement).getBoundingClientRect();
+                    const rect = (
+                      e.target as HTMLElement
+                    ).getBoundingClientRect();
                     setHoveredCell({
-                      date: day.date.toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }),
+                      date: day.date.toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }),
                       count: day.count,
                       x: rect.left + rect.width / 2,
                       y: rect.top + rect.height / 2,
@@ -1219,29 +1318,28 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
         </div>
       </div>
       {createPortal(
-        hoveredCell &&
-          tooltipCoords && (
-            <div
-              ref={tooltipRef}
-              style={{
-                position: "fixed",
-                left: tooltipCoords.left,
-                top: tooltipCoords.top,
-                backgroundColor: "var(--surface-tooltip, var(--bg3))",
-                border: "1px solid var(--border-base)",
-                borderRadius: "var(--border-radius-sm, 4px)",
-                padding: "6px 10px",
-                fontSize: "var(--text-xs)",
-                color: "var(--fg)",
-                whiteSpace: "nowrap",
-                pointerEvents: "none",
-                zIndex: 9999,
-                boxShadow: "var(--shadow)",
-              }}
-            >
-              {hoveredCell.count} tasks {hoveredCell.date}
-            </div>
-          ),
+        hoveredCell && tooltipCoords && (
+          <div
+            ref={tooltipRef}
+            style={{
+              position: "fixed",
+              left: tooltipCoords.left,
+              top: tooltipCoords.top,
+              backgroundColor: "var(--surface-tooltip, var(--bg3))",
+              border: "1px solid var(--border-base)",
+              borderRadius: "var(--border-radius-sm, 4px)",
+              padding: "6px 10px",
+              fontSize: "var(--text-xs)",
+              color: "var(--fg)",
+              whiteSpace: "nowrap",
+              pointerEvents: "none",
+              zIndex: 9999,
+              boxShadow: "var(--shadow)",
+            }}
+          >
+            {hoveredCell.count} tasks {hoveredCell.date}
+          </div>
+        ),
         document.body,
       )}
     </div>
@@ -1250,7 +1348,10 @@ const ActivityGraph: React.FC<{ activityCounts?: Map<string, number> }> = ({
 
 /* -------------------------- Statistics (Blocks) ------------------------------ */
 
-const BlockIcon: React.FC<{ iconClass: string; color: string }> = ({ iconClass, color }) => (
+const BlockIcon: React.FC<{ iconClass: string; color: string }> = ({
+  iconClass,
+  color,
+}) => (
   <div
     style={{
       height: "100%",
@@ -1606,7 +1707,12 @@ const WelcomeTab: React.FC = () => {
       for (const column of board.columns) {
         for (const task of column.tasks) {
           if (task.deadline) {
-            out.push({ id: task.id, content: task.content, deadline: task.deadline, completed: task.completed });
+            out.push({
+              id: task.id,
+              content: task.content,
+              deadline: task.deadline,
+              completed: task.completed,
+            });
           }
         }
       }
@@ -1672,7 +1778,11 @@ function arrayMove<T>(arr: T[], from: number, to: number): T[] {
 
 /* index of the drop target based on the pointer position inside a container
    (works inside the CSS-scaled demo: getBoundingClientRect is scaled already) */
-function indexOfChildAtPoint(container: HTMLElement | null, client: number, axis: "x" | "y"): number {
+function indexOfChildAtPoint(
+  container: HTMLElement | null,
+  client: number,
+  axis: "x" | "y",
+): number {
   if (!container) return 0;
   const children = Array.from(container.children).filter(
     (child) =>
@@ -1683,7 +1793,8 @@ function indexOfChildAtPoint(container: HTMLElement | null, client: number, axis
   let idx = children.length;
   for (let i = 0; i < children.length; i++) {
     const rect = children[i].getBoundingClientRect();
-    const mid = axis === "x" ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
+    const mid =
+      axis === "x" ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
     if (client < mid) {
       idx = i;
       break;
@@ -1724,7 +1835,8 @@ function columnSlotIndex(kanban: HTMLElement | null, clientX: number): number {
 function setScaledDragImage(e: React.DragEvent): void {
   const el = e.currentTarget as HTMLElement;
   const rect = el.getBoundingClientRect();
-  const scale = rect.width > 0 && el.offsetWidth > 0 ? rect.width / el.offsetWidth : 1;
+  const scale =
+    rect.width > 0 && el.offsetWidth > 0 ? rect.width / el.offsetWidth : 1;
   if (Math.abs(scale - 1) < 0.01) return;
   const ghost = el.cloneNode(true) as HTMLElement;
   ghost.style.position = "fixed";
@@ -1737,7 +1849,11 @@ function setScaledDragImage(e: React.DragEvent): void {
   ghost.style.pointerEvents = "none";
   ghost.setAttribute("aria-hidden", "true");
   (el.closest(".owl-demo") ?? document.body).appendChild(ghost);
-  e.dataTransfer.setDragImage(ghost, e.clientX - rect.left, e.clientY - rect.top);
+  e.dataTransfer.setDragImage(
+    ghost,
+    e.clientX - rect.left,
+    e.clientY - rect.top,
+  );
   setTimeout(() => ghost.remove(), 0);
 }
 
@@ -1825,8 +1941,18 @@ const OPS_COLUMNS: DemoColumn[] = [
     title: "Todo",
     color: "var(--bg2)",
     tasks: [
-      { id: "o-101", content: "Rotate on-call schedule", completed: false, deadline: "2026-08-04" },
-      { id: "o-102", content: "Update incident runbook", completed: false, deadline: "2026-08-07" },
+      {
+        id: "o-101",
+        content: "Rotate on-call schedule",
+        completed: false,
+        deadline: "2026-08-04",
+      },
+      {
+        id: "o-102",
+        content: "Update incident runbook",
+        completed: false,
+        deadline: "2026-08-07",
+      },
     ],
   },
   {
@@ -1834,7 +1960,12 @@ const OPS_COLUMNS: DemoColumn[] = [
     title: "Doing",
     color: "var(--bg2)",
     tasks: [
-      { id: "o-201", content: "Migrate CI runners", completed: false, deadline: "2026-08-09" },
+      {
+        id: "o-201",
+        content: "Migrate CI runners",
+        completed: false,
+        deadline: "2026-08-09",
+      },
     ],
   },
   {
@@ -1842,8 +1973,18 @@ const OPS_COLUMNS: DemoColumn[] = [
     title: "Done",
     color: "var(--bg2)",
     tasks: [
-      { id: "o-301", content: "Provision staging env", completed: true, deadline: "2026-07-30" },
-      { id: "o-302", content: "Setup log shipping", completed: true, deadline: "2026-07-31" },
+      {
+        id: "o-301",
+        content: "Provision staging env",
+        completed: true,
+        deadline: "2026-07-30",
+      },
+      {
+        id: "o-302",
+        content: "Setup log shipping",
+        completed: true,
+        deadline: "2026-07-31",
+      },
     ],
   },
 ];
@@ -1854,9 +1995,24 @@ const LAUNCHER_COLUMNS: DemoColumn[] = [
     title: "Backlog",
     color: "var(--bg2)",
     tasks: [
-      { id: "l-101", content: "Design updater UI states", completed: false, deadline: "2026-08-06" },
-      { id: "l-102", content: "Multi-channel releases (stable / beta)", completed: false, deadline: "2026-08-10" },
-      { id: "l-103", content: "Code signing pipeline for macOS builds", completed: false, deadline: "2026-08-14" },
+      {
+        id: "l-101",
+        content: "Design updater UI states",
+        completed: false,
+        deadline: "2026-08-06",
+      },
+      {
+        id: "l-102",
+        content: "Multi-channel releases (stable / beta)",
+        completed: false,
+        deadline: "2026-08-10",
+      },
+      {
+        id: "l-103",
+        content: "Code signing pipeline for macOS builds",
+        completed: false,
+        deadline: "2026-08-14",
+      },
     ],
   },
   {
@@ -1864,9 +2020,24 @@ const LAUNCHER_COLUMNS: DemoColumn[] = [
     title: "In Progress",
     color: "var(--bg2)",
     tasks: [
-      { id: "l-201", content: "Auto-update delta patches", completed: false, deadline: "2026-08-09" },
-      { id: "l-202", content: "Playtime tracking hooks", completed: false, deadline: "2026-08-12" },
-      { id: "l-203", content: "Game library import & scan", completed: false, deadline: "2026-08-15" },
+      {
+        id: "l-201",
+        content: "Auto-update delta patches",
+        completed: false,
+        deadline: "2026-08-09",
+      },
+      {
+        id: "l-202",
+        content: "Playtime tracking hooks",
+        completed: false,
+        deadline: "2026-08-12",
+      },
+      {
+        id: "l-203",
+        content: "Game library import & scan",
+        completed: false,
+        deadline: "2026-08-15",
+      },
     ],
   },
   {
@@ -1874,9 +2045,24 @@ const LAUNCHER_COLUMNS: DemoColumn[] = [
     title: "Completed",
     color: "var(--bg2)",
     tasks: [
-      { id: "l-301", content: "Installer bootstrapper", completed: true, deadline: "2026-07-25" },
-      { id: "l-302", content: "OAuth login flow", completed: true, deadline: "2026-07-28" },
-      { id: "l-303", content: "Download manager resume", completed: true, deadline: "2026-08-01" },
+      {
+        id: "l-301",
+        content: "Installer bootstrapper",
+        completed: true,
+        deadline: "2026-07-25",
+      },
+      {
+        id: "l-302",
+        content: "OAuth login flow",
+        completed: true,
+        deadline: "2026-07-28",
+      },
+      {
+        id: "l-303",
+        content: "Download manager resume",
+        completed: true,
+        deadline: "2026-08-01",
+      },
     ],
   },
 ];
@@ -1887,8 +2073,18 @@ const PIPELINE_COLUMNS: DemoColumn[] = [
     title: "Backlog",
     color: "var(--bg2)",
     tasks: [
-      { id: "pl-101", content: "Event schema v2 migration", completed: false, deadline: "2026-08-16" },
-      { id: "pl-102", content: "Warehouse export (Parquet / S3)", completed: false, deadline: "2026-08-24" },
+      {
+        id: "pl-101",
+        content: "Event schema v2 migration",
+        completed: false,
+        deadline: "2026-08-16",
+      },
+      {
+        id: "pl-102",
+        content: "Warehouse export (Parquet / S3)",
+        completed: false,
+        deadline: "2026-08-24",
+      },
     ],
   },
   {
@@ -1896,8 +2092,18 @@ const PIPELINE_COLUMNS: DemoColumn[] = [
     title: "In Progress",
     color: "var(--bg2)",
     tasks: [
-      { id: "pl-201", content: "Kafka sink for UI events", completed: false, deadline: "2026-08-18" },
-      { id: "pl-202", content: "Dashboard latency queries", completed: false, deadline: "2026-08-22" },
+      {
+        id: "pl-201",
+        content: "Kafka sink for UI events",
+        completed: false,
+        deadline: "2026-08-18",
+      },
+      {
+        id: "pl-202",
+        content: "Dashboard latency queries",
+        completed: false,
+        deadline: "2026-08-22",
+      },
     ],
   },
   {
@@ -1905,9 +2111,24 @@ const PIPELINE_COLUMNS: DemoColumn[] = [
     title: "Completed",
     color: "var(--bg2)",
     tasks: [
-      { id: "pl-301", content: "Event ingestion API", completed: true, deadline: "2026-07-29" },
-      { id: "pl-302", content: "Session rollups", completed: true, deadline: "2026-08-02" },
-      { id: "pl-303", content: "Error tracking pipeline", completed: true, deadline: "2026-08-05" },
+      {
+        id: "pl-301",
+        content: "Event ingestion API",
+        completed: true,
+        deadline: "2026-07-29",
+      },
+      {
+        id: "pl-302",
+        content: "Session rollups",
+        completed: true,
+        deadline: "2026-08-02",
+      },
+      {
+        id: "pl-303",
+        content: "Error tracking pipeline",
+        completed: true,
+        deadline: "2026-08-05",
+      },
     ],
   },
 ];
@@ -1916,7 +2137,11 @@ const INITIAL_BOARDS: DemoBoard[] = [
   { id: "board-1", title: "Product", columns: INITIAL_COLUMNS },
   { id: "board-2", title: "Ops", columns: OPS_COLUMNS },
   { id: "board-launcher", title: "Launcher V2", columns: LAUNCHER_COLUMNS },
-  { id: "board-pipeline", title: "Analytics Pipeline", columns: PIPELINE_COLUMNS },
+  {
+    id: "board-pipeline",
+    title: "Analytics Pipeline",
+    columns: PIPELINE_COLUMNS,
+  },
 ];
 
 const TaskContent: React.FC<{
@@ -2094,8 +2319,21 @@ const Task: React.FC<{
   onOpen: (columnId: string, task: DemoTask) => void;
   onDragStart: (e: React.DragEvent) => void;
   onDragEnd: (e: React.DragEvent) => void;
-}> = ({ task, columnId, color, onToggleTask, onOpen, onDragStart, onDragEnd }) => (
-  <motion.div layout initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 1, scale: 1 }}>
+}> = ({
+  task,
+  columnId,
+  color,
+  onToggleTask,
+  onOpen,
+  onDragStart,
+  onDragEnd,
+}) => (
+  <motion.div
+    layout
+    initial={{ opacity: 0, scale: 0.8 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 1, scale: 1 }}
+  >
     <div
       draggable
       className="task-container"
@@ -2103,7 +2341,13 @@ const Task: React.FC<{
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
     >
-      <TaskContent task={task} columnId={columnId} bg_color={color} onToggleTask={onToggleTask} onOpen={onOpen} />
+      <TaskContent
+        task={task}
+        columnId={columnId}
+        bg_color={color}
+        onToggleTask={onToggleTask}
+        onOpen={onOpen}
+      />
     </div>
   </motion.div>
 );
@@ -2207,9 +2451,19 @@ const Column: React.FC<{
   onToggleTask: (columnId: string, taskId: string) => void;
   onOpen: (columnId: string, task: DemoTask) => void;
   onCreateTask: (columnId: string) => void;
-  onColumnDrop: (e: React.DragEvent<HTMLDivElement>, column: DemoColumn) => void;
+  onColumnDrop: (
+    e: React.DragEvent<HTMLDivElement>,
+    column: DemoColumn,
+  ) => void;
   onTaskDrop: (e: React.DragEvent, column: DemoColumn) => void;
-}> = ({ column, onToggleTask, onOpen, onCreateTask, onColumnDrop, onTaskDrop }) => (
+}> = ({
+  column,
+  onToggleTask,
+  onOpen,
+  onCreateTask,
+  onColumnDrop,
+  onTaskDrop,
+}) => (
   <motion.div className="task-main-block" layout>
     <ColumnHeader
       column={column}
@@ -2230,7 +2484,12 @@ const Column: React.FC<{
       }}
       onDrop={(e) => onColumnDrop(e, column)}
     >
-      <TaskList column={column} onToggleTask={onToggleTask} onOpen={onOpen} onTaskDrop={onTaskDrop} />
+      <TaskList
+        column={column}
+        onToggleTask={onToggleTask}
+        onOpen={onOpen}
+        onTaskDrop={onTaskDrop}
+      />
     </div>
   </motion.div>
 );
@@ -2297,7 +2556,8 @@ const BoardElement: React.FC<{
       margin: "5px 0",
       borderRadius: "var(--border-radius)",
       outline: "none",
-      width: "calc(100% - var(--spacing-s) - var(--spacing-s))",
+      width:
+        "calc(100% - var(--spacing-s) - var(--spacing-s) - var(--spacing-s))",
       padding: "0 0 0 var(--spacing-s)",
       height: "40px",
       display: "flex",
@@ -2323,12 +2583,19 @@ const DemoTasksHeader: React.FC<{ columns: DemoColumn[] }> = ({ columns }) => {
     }
     return { totalTasks, completedTasks };
   }, [columns]);
-  const completionPercentage = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
+  const completionPercentage =
+    totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
   return (
     <div className="tab_header_content">
       <div
         className="progress"
-        style={{ margin: "0px", padding: "0px", width: "220px", height: "15px", backgroundColor: "var(--bg2)" }}
+        style={{
+          margin: "0px",
+          padding: "0px",
+          width: "220px",
+          height: "15px",
+          backgroundColor: "var(--bg2)",
+        }}
       >
         <div
           className="progress-bar"
@@ -2369,7 +2636,12 @@ const DEMO_USERS: ReadonlyArray<readonly [string, string]> = [
   ["Leo Park", "leo@owl.dev"],
 ];
 
-type DemoTaskLastAction = [action: string, userName: string, userEmail: string, createdAt: string];
+type DemoTaskLastAction = [
+  action: string,
+  userName: string,
+  userEmail: string,
+  createdAt: string,
+];
 
 function hashDemoId(id: string): number {
   let h = 0;
@@ -2377,7 +2649,9 @@ function hashDemoId(id: string): number {
   return h;
 }
 
-const demoLastAction = (task: DemoTask): { action: string; userName: string } => {
+const demoLastAction = (
+  task: DemoTask,
+): { action: string; userName: string } => {
   const h = hashDemoId(task.id);
   const actions = task.completed
     ? ["complete", "change_column", "change_color"]
@@ -2390,7 +2664,16 @@ const demoLastAction = (task: DemoTask): { action: string; userName: string } =>
 
 const demoLastActions = (task: DemoTask): DemoTaskLastAction[] => {
   const h = hashDemoId(task.id);
-  const actions = ["edit", "change_column", "change_deadline", "complete", "reopen", "assign", "change_color", "change_order"];
+  const actions = [
+    "edit",
+    "change_column",
+    "change_deadline",
+    "complete",
+    "reopen",
+    "assign",
+    "change_color",
+    "change_order",
+  ];
   const now = Date.now();
   const out: DemoTaskLastAction[] = [];
   for (let i = 0; i < 4; i++) {
@@ -2416,7 +2699,15 @@ const EditTaskModal: React.FC<{
   deadline: string;
   onDeadlineChange: (value: string) => void;
   task: DemoTask;
-}> = ({ tempContent, onContentChange, onSave, onCancel, deadline, onDeadlineChange, task }) => {
+}> = ({
+  tempContent,
+  onContentChange,
+  onSave,
+  onCancel,
+  deadline,
+  onDeadlineChange,
+  task,
+}) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = useState<{
     x: number;
@@ -2437,7 +2728,8 @@ const EditTaskModal: React.FC<{
   }, [onCancel]);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
-    if (contentRef.current && !contentRef.current.contains(e.target as Node)) onSave();
+    if (contentRef.current && !contentRef.current.contains(e.target as Node))
+      onSave();
   };
 
   const btnStyle: React.CSSProperties = {
@@ -2483,7 +2775,14 @@ const EditTaskModal: React.FC<{
             maxHeight: "360px",
           }}
         >
-          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              flex: 1,
+              minWidth: 0,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <textarea
               className="task-text"
               value={tempContent}
@@ -2519,7 +2818,14 @@ const EditTaskModal: React.FC<{
                 onChange={(e) => onDeadlineChange(e.target.value)}
               />
             </div>
-            <div style={{ display: "flex", gap: "var(--spacing-s)", width: "100%", marginTop: "var(--spacing-m)" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "var(--spacing-s)",
+                width: "100%",
+                marginTop: "var(--spacing-m)",
+              }}
+            >
               <button style={btnStyle} onClick={onSave}>
                 <i className="fa-solid fa-hard-drive"></i> Save
               </button>
@@ -2540,39 +2846,61 @@ const EditTaskModal: React.FC<{
                 overflow: "hidden",
               }}
             >
-              <div className="task-history" style={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
-                {lastActions.map(([action, userName, userEmail, createdAt], i) => (
-                  <div
-                    className="task-history-item"
-                    key={i}
-                    onClick={() => userEmail && navigator.clipboard?.writeText(userEmail)}
-                    onMouseEnter={(e) =>
-                      userEmail &&
-                      setTooltip({
-                        x: e.clientX,
-                        y: e.clientY,
-                        action,
-                        userName,
-                        userEmail,
-                        date: new Date(createdAt).toLocaleString(),
-                      })
-                    }
-                    onMouseMove={(e) => setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev))}
-                    onMouseLeave={() => setTooltip(null)}
-                  >
-                    <div className="task-history-item-header">
-                      <span className="task-history-action">{TASK_ACTION_LABELS[action] ?? action}</span>
-                      <span className="task-history-user">{userName}</span>
+              <div
+                className="task-history"
+                style={{ flex: 1, minHeight: 0, overflowY: "auto" }}
+              >
+                {lastActions.map(
+                  ([action, userName, userEmail, createdAt], i) => (
+                    <div
+                      className="task-history-item"
+                      key={i}
+                      onClick={() =>
+                        userEmail && navigator.clipboard?.writeText(userEmail)
+                      }
+                      onMouseEnter={(e) =>
+                        userEmail &&
+                        setTooltip({
+                          x: e.clientX,
+                          y: e.clientY,
+                          action,
+                          userName,
+                          userEmail,
+                          date: new Date(createdAt).toLocaleString(),
+                        })
+                      }
+                      onMouseMove={(e) =>
+                        setTooltip((prev) =>
+                          prev ? { ...prev, x: e.clientX, y: e.clientY } : prev,
+                        )
+                      }
+                      onMouseLeave={() => setTooltip(null)}
+                    >
+                      <div className="task-history-item-header">
+                        <span className="task-history-action">
+                          {TASK_ACTION_LABELS[action] ?? action}
+                        </span>
+                        <span className="task-history-user">{userName}</span>
+                      </div>
+                      <div className="task-history-item-date">
+                        {new Date(createdAt).toLocaleString()}
+                      </div>
                     </div>
-                    <div className="task-history-item-date">{new Date(createdAt).toLocaleString()}</div>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </div>
           )}
         </div>
         {tooltip && (
-          <div className="action-email-tooltip" style={{ position: "fixed", top: tooltip.y + 16, left: tooltip.x + 16 }}>
+          <div
+            className="action-email-tooltip"
+            style={{
+              position: "fixed",
+              top: tooltip.y + 16,
+              left: tooltip.x + 16,
+            }}
+          >
             <div>{TASK_ACTION_LABELS[tooltip.action] ?? tooltip.action}</div>
             <div>{tooltip.userName}</div>
             <div>{tooltip.userEmail}</div>
@@ -2587,9 +2915,15 @@ const EditTaskModal: React.FC<{
 
 const TasksTab: React.FC = () => {
   const [boards, setBoards] = useState<DemoBoard[]>(INITIAL_BOARDS);
-  const [currentBoardId, setCurrentBoardId] = useState<string>(INITIAL_BOARDS[0].id);
+  const [currentBoardId, setCurrentBoardId] = useState<string>(
+    INITIAL_BOARDS[0].id,
+  );
   const [isBoardsListVisible, setIsBoardsListVisible] = useState(true);
-  const [editing, setEditing] = useState<{ boardId: string; columnId: string; taskId: string } | null>(null);
+  const [editing, setEditing] = useState<{
+    boardId: string;
+    columnId: string;
+    taskId: string;
+  } | null>(null);
   const [tempContent, setTempContent] = useState("");
   const [tempDeadline, setTempDeadline] = useState("");
 
@@ -2598,7 +2932,10 @@ const TasksTab: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && (event.code === "KeyB" || event.key === "b")) {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        (event.code === "KeyB" || event.key === "b")
+      ) {
         event.preventDefault();
         setIsBoardsListVisible((prev) => !prev);
       }
@@ -2607,13 +2944,20 @@ const TasksTab: React.FC = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const updateBoard = (boardId: string, updater: (b: DemoBoard) => DemoBoard) => {
+  const updateBoard = (
+    boardId: string,
+    updater: (b: DemoBoard) => DemoBoard,
+  ) => {
     setBoards((prev) => prev.map((b) => (b.id === boardId ? updater(b) : b)));
   };
 
   const createNewBoard = () => {
     const id = "board-" + Date.now();
-    const board: DemoBoard = { id, title: "New Board " + (boards.length + 1), columns: [] };
+    const board: DemoBoard = {
+      id,
+      title: "New Board " + (boards.length + 1),
+      columns: [],
+    };
     setBoards((prev) => [...prev, board]);
     setCurrentBoardId(id);
   };
@@ -2621,7 +2965,15 @@ const TasksTab: React.FC = () => {
   const createNewColumn = (boardId: string) => {
     updateBoard(boardId, (b) => ({
       ...b,
-      columns: [...b.columns, { id: "col-" + Date.now(), title: "New Column", color: "var(--bg2)", tasks: [] }],
+      columns: [
+        ...b.columns,
+        {
+          id: "col-" + Date.now(),
+          title: "New Column",
+          color: "var(--bg2)",
+          tasks: [],
+        },
+      ],
     }));
   };
 
@@ -2652,7 +3004,12 @@ const TasksTab: React.FC = () => {
       ...b,
       columns: b.columns.map((col) =>
         col.id === columnId
-          ? { ...col, tasks: col.tasks.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t)) }
+          ? {
+              ...col,
+              tasks: col.tasks.map((t) =>
+                t.id === taskId ? { ...t, completed: !t.completed } : t,
+              ),
+            }
           : col,
       ),
     }));
@@ -2673,7 +3030,13 @@ const TasksTab: React.FC = () => {
           ? {
               ...col,
               tasks: col.tasks.map((t) =>
-                t.id === editing.taskId ? { ...t, content: tempContent, deadline: tempDeadline || undefined } : t,
+                t.id === editing.taskId
+                  ? {
+                      ...t,
+                      content: tempContent,
+                      deadline: tempDeadline || undefined,
+                    }
+                  : t,
               ),
             }
           : col,
@@ -2691,7 +3054,10 @@ const TasksTab: React.FC = () => {
 
   const reorderColumns = (boardId: string, from: number, to: number) => {
     if (from === to) return;
-    updateBoard(boardId, (b) => ({ ...b, columns: arrayMove(b.columns, from, to) }));
+    updateBoard(boardId, (b) => ({
+      ...b,
+      columns: arrayMove(b.columns, from, to),
+    }));
   };
 
   const moveTask = (
@@ -2709,7 +3075,8 @@ const TasksTab: React.FC = () => {
       const srcTasks = [...src.tasks];
       const [removed] = srcTasks.splice(srcIndex, 1);
       if (!removed) return b;
-      const destTasks = destColumnId === srcColumnId ? srcTasks : [...dest.tasks];
+      const destTasks =
+        destColumnId === srcColumnId ? srcTasks : [...dest.tasks];
       if (destColumnId !== srcColumnId) {
         destTasks.splice(destIndex, 0, removed);
       } else {
@@ -2719,7 +3086,10 @@ const TasksTab: React.FC = () => {
         ...b,
         columns: columnsArr.map((c) =>
           c.id === srcColumnId
-            ? { ...c, tasks: destColumnId === srcColumnId ? destTasks : srcTasks }
+            ? {
+                ...c,
+                tasks: destColumnId === srcColumnId ? destTasks : srcTasks,
+              }
             : c.id === destColumnId
               ? { ...c, tasks: destTasks }
               : c,
@@ -2735,10 +3105,16 @@ const TasksTab: React.FC = () => {
     if (!taskId || !srcColumnId) return;
 
     const srcColumn = columns.find((c) => c.id === srcColumnId);
-    const srcIndex = srcColumn ? srcColumn.tasks.findIndex((t) => t.id === taskId) : -1;
+    const srcIndex = srcColumn
+      ? srcColumn.tasks.findIndex((t) => t.id === taskId)
+      : -1;
     if (srcIndex === -1) return;
 
-    const destIndex = indexOfChildAtPoint(e.currentTarget as HTMLElement, e.clientY, "y");
+    const destIndex = indexOfChildAtPoint(
+      e.currentTarget as HTMLElement,
+      e.clientY,
+      "y",
+    );
     const destColumn = column;
     let finalIndex = destIndex;
     // if dropping within the same column after the source, account removal
@@ -2747,24 +3123,36 @@ const TasksTab: React.FC = () => {
     moveTask(currentBoardId, srcColumnId, srcIndex, destColumn.id, finalIndex);
   };
 
-  const handleColumnDrop = (e: React.DragEvent<HTMLDivElement>, column: DemoColumn) => {
+  const handleColumnDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    column: DemoColumn,
+  ) => {
     e.preventDefault();
     const columnId = e.dataTransfer.getData("text/column");
     if (!columnId) return;
     const fromIndex = columns.findIndex((c) => c.id === columnId);
     if (fromIndex === -1) return;
-    const kanban = (e.currentTarget as HTMLElement).closest(".kanbanview") as HTMLElement | null;
+    const kanban = (e.currentTarget as HTMLElement).closest(
+      ".kanbanview",
+    ) as HTMLElement | null;
     const toIndex = columnSlotIndex(kanban, e.clientX);
     reorderColumns(currentBoardId, fromIndex, toIndex);
   };
 
-  const handleBoardDrop = (e: React.DragEvent<HTMLDivElement>, targetBoard: DemoBoard) => {
+  const handleBoardDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    targetBoard: DemoBoard,
+  ) => {
     e.preventDefault();
     const boardId = e.dataTransfer.getData("text/board");
     if (!boardId) return;
     const fromIndex = boards.findIndex((b) => b.id === boardId);
     if (fromIndex === -1) return;
-    const toIndex = indexOfChildAtPoint(e.currentTarget.parentElement, e.clientY, "y");
+    const toIndex = indexOfChildAtPoint(
+      e.currentTarget.parentElement,
+      e.clientY,
+      "y",
+    );
     let finalTo = toIndex;
     if (fromIndex < finalTo) finalTo -= 1;
     setBoards((prev) => arrayMove(prev, fromIndex, finalTo));
@@ -2788,7 +3176,12 @@ const TasksTab: React.FC = () => {
               animate={{ width: 320 }}
               exit={{ width: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              style={{ overflow: "hidden", height: "100%", flexShrink: 0, marginLeft: "var(--spacing-l)" }}
+              style={{
+                overflow: "hidden",
+                height: "100%",
+                flexShrink: 0,
+                marginLeft: "var(--spacing-l)",
+              }}
             >
               <motion.div
                 className="boards-list"
@@ -2796,9 +3189,17 @@ const TasksTab: React.FC = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15, delay: 0.15 }}
-                style={{ padding: "10px", height: "100%", overflowY: "auto", marginLeft: "auto" }}
+                style={{
+                  padding: "10px",
+                  height: "100%",
+                  overflowY: "auto",
+                  marginLeft: "auto",
+                }}
               >
-                <BoardsHeader onCreateNewBoard={createNewBoard} onToggleList={() => setIsBoardsListVisible(false)} />
+                <BoardsHeader
+                  onCreateNewBoard={createNewBoard}
+                  onToggleList={() => setIsBoardsListVisible(false)}
+                />
                 <div data-droppable="boards">
                   {boards.map((board) => (
                     <BoardElement
@@ -2847,20 +3248,34 @@ const TasksTab: React.FC = () => {
             <Column
               key={column.id}
               column={column}
-              onToggleTask={(columnId, taskId) => toggleTask(currentBoardId, columnId, taskId)}
+              onToggleTask={(columnId, taskId) =>
+                toggleTask(currentBoardId, columnId, taskId)
+              }
               onOpen={openTaskEditor}
-              onCreateTask={(columnId) => createNewTask(currentBoardId, columnId)}
+              onCreateTask={(columnId) =>
+                createNewTask(currentBoardId, columnId)
+              }
               onColumnDrop={handleColumnDrop}
               onTaskDrop={handleTaskDrop}
             />
           ))}
           <motion.div
             className="task-main-block mini-task-main-block"
-            style={{ flex: "0 0 220px", width: 220, alignSelf: "flex-start", minHeight: 200 }}
+            style={{
+              flex: "0 0 220px",
+              width: 220,
+              alignSelf: "flex-start",
+              minHeight: 200,
+            }}
           >
             <button
               className="tr_button task-block-header centered_content"
-              style={{ textAlign: "center", height: "100%", maxHeight: "600px", minHeight: "200px" }}
+              style={{
+                textAlign: "center",
+                height: "100%",
+                maxHeight: "600px",
+                minHeight: "200px",
+              }}
               onClick={() => createNewColumn(currentBoardId)}
             >
               <i className="fa-solid fa-plus" style={{ marginRight: 6 }} />
@@ -3028,7 +3443,12 @@ export const launcher = {
       { user_id: 51, name: "Den", email: "den@owl.app", role: "MEMBER" },
       { user_id: 52, name: "Rus", email: "rus@owl.app", role: "MEMBER" },
       { user_id: 53, name: "Vita", email: "vita@owl.app", role: "MEMBER" },
-      { user_id: 54, name: "Kristina", email: "kristina@owl.app", role: "MEMBER" },
+      {
+        user_id: 54,
+        name: "Kristina",
+        email: "kristina@owl.app",
+        role: "MEMBER",
+      },
       { user_id: 55, name: "Anton", email: "anton@owl.app", role: "MEMBER" },
       { user_id: 56, name: "Dasha", email: "dasha@owl.app", role: "MEMBER" },
     ],
@@ -3102,10 +3522,19 @@ const ProjectCard: React.FC<{
 
   const isOverdue = days !== null && days < 0;
   const isSoon = days !== null && days >= 0 && days <= 7;
-  const daysColor = isOverdue ? "var(--red)" : isSoon ? "var(--yellow)" : "var(--fg-secondary)";
+  const daysColor = isOverdue
+    ? "var(--red)"
+    : isSoon
+      ? "var(--yellow)"
+      : "var(--fg-secondary)";
 
   return (
-    <div draggable onDragStart={onDragStart} onDragEnd={onDragEnd} style={{ cursor: "grab" }}>
+    <div
+      draggable
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      style={{ cursor: "grab" }}
+    >
       <motion.div
         className="project_block"
         role="button"
@@ -3125,10 +3554,18 @@ const ProjectCard: React.FC<{
             window.removeEventListener("mousemove", move);
           };
           const move = (ev: MouseEvent) => {
-            if (Math.abs(ev.clientX - startX) > 5 || Math.abs(ev.clientY - startY) > 5) clear();
+            if (
+              Math.abs(ev.clientX - startX) > 5 ||
+              Math.abs(ev.clientY - startY) > 5
+            )
+              clear();
           };
           const up = (ev: MouseEvent) => {
-            if (Math.abs(ev.clientX - startX) < 5 && Math.abs(ev.clientY - startY) < 5) onOpen();
+            if (
+              Math.abs(ev.clientX - startX) < 5 &&
+              Math.abs(ev.clientY - startY) < 5
+            )
+              onOpen();
             clear();
           };
           window.addEventListener("mousemove", move);
@@ -3165,10 +3602,22 @@ const ProjectCard: React.FC<{
 
           <div className="project_card_grid">
             <div className="project_card_meta_row">
-              <i className="fa-regular fa-calendar-plus" style={{ color: "var(--fg-secondary)" }}></i>
+              <i
+                className="fa-regular fa-calendar-plus"
+                style={{ color: "var(--fg-secondary)" }}
+              ></i>
               <strong className="project_card_meta_text">
                 {formatDate(project.created_at)} –{" "}
-                <span style={{ color: isOverdue ? "var(--red)" : isSoon ? "var(--yellow)" : undefined, fontWeight: 700 }}>
+                <span
+                  style={{
+                    color: isOverdue
+                      ? "var(--red)"
+                      : isSoon
+                        ? "var(--yellow)"
+                        : undefined,
+                    fontWeight: 700,
+                  }}
+                >
                   {formatDate(project.deadline)}
                 </span>
               </strong>
@@ -3191,14 +3640,25 @@ const ProjectCard: React.FC<{
             </div>
             {days !== null && (
               <div className="project_card_meta_row">
-                <i className="fa-regular fa-clock" style={{ color: daysColor }}></i>
-                <strong className="project_card_meta_text" style={{ color: daysColor }}>
-                  {isOverdue ? `${Math.abs(days)} days overdue` : `${days} days left`}
+                <i
+                  className="fa-regular fa-clock"
+                  style={{ color: daysColor }}
+                ></i>
+                <strong
+                  className="project_card_meta_text"
+                  style={{ color: daysColor }}
+                >
+                  {isOverdue
+                    ? `${Math.abs(days)} days overdue`
+                    : `${days} days left`}
                 </strong>
               </div>
             )}
             <div className="project_card_meta_row">
-              <strong className="project_card_meta_text" style={{ color: statusColor, textTransform: "capitalize" }}>
+              <strong
+                className="project_card_meta_text"
+                style={{ color: statusColor, textTransform: "capitalize" }}
+              >
                 {project.status}
               </strong>
             </div>
@@ -3243,7 +3703,14 @@ const ProjectCard: React.FC<{
                   )}
                 </>
               ) : (
-                <span style={{ fontSize: "var(--text-sm)", color: "var(--fg-secondary)" }}>No members</span>
+                <span
+                  style={{
+                    fontSize: "var(--text-sm)",
+                    color: "var(--fg-secondary)",
+                  }}
+                >
+                  No members
+                </span>
               )}
             </div>
           </div>
@@ -3296,10 +3763,15 @@ const AVATAR_COLORS = [
   "var(--cyan)",
 ];
 
-const getAvatarColor = (userId: number): string => AVATAR_COLORS[userId % AVATAR_COLORS.length];
+const getAvatarColor = (userId: number): string =>
+  AVATAR_COLORS[userId % AVATAR_COLORS.length];
 
 const getMemberInitial = (member: DemoProjectMember): string => {
-  const letter = member.email ? member.email.charAt(0) : member.name ? member.name.charAt(0) : "?";
+  const letter = member.email
+    ? member.email.charAt(0)
+    : member.name
+      ? member.name.charAt(0)
+      : "?";
   return letter.toUpperCase();
 };
 
@@ -3319,7 +3791,11 @@ const formatDate = (date: string): string => {
   if (!date) return "-";
   const parsed = new Date(date);
   if (isNaN(parsed.getTime())) return date;
-  return parsed.toLocaleDateString("en-EN", { day: "2-digit", month: "short", year: "numeric" });
+  return parsed.toLocaleDateString("en-EN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 };
 
 /* DemoSelect: the app uses native <select> elements, but inside the CSS-scaled
@@ -3329,12 +3805,25 @@ const formatDate = (date: string): string => {
 const DemoSelect: React.FC<{
   value: string;
   onChange: (value: string) => void;
-  options: { value: string; label: string; disabled?: boolean; color?: string }[];
+  options: {
+    value: string;
+    label: string;
+    disabled?: boolean;
+    color?: string;
+  }[];
   placeholder?: string;
   className?: string;
   triggerStyle?: React.CSSProperties;
   ariaLabel?: string;
-}> = ({ value, onChange, options, placeholder, className = "", triggerStyle, ariaLabel }) => {
+}> = ({
+  value,
+  onChange,
+  options,
+  placeholder,
+  className = "",
+  triggerStyle,
+  ariaLabel,
+}) => {
   const [open, setOpen] = useState(false);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const [pos, setPos] = useState({ left: 0, top: 0, width: 0, height: 0 });
@@ -3345,7 +3834,12 @@ const DemoSelect: React.FC<{
   const selected = options.find((o) => o.value === value && !o.disabled);
   const visibleOptions = options.filter((o) => !o.disabled);
 
-  const computePos = (): { left: number; top: number; width: number; height: number } | null => {
+  const computePos = (): {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  } | null => {
     const trigger = triggerRef.current;
     if (!trigger) return null;
     const demo = trigger.closest(".owl-demo") as HTMLElement | null;
@@ -3390,7 +3884,8 @@ const DemoSelect: React.FC<{
     if (!open) return;
     const onDown = (e: MouseEvent) => {
       const t = e.target as Node;
-      if (triggerRef.current?.contains(t) || popupRef.current?.contains(t)) return;
+      if (triggerRef.current?.contains(t) || popupRef.current?.contains(t))
+        return;
       setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
@@ -3421,7 +3916,11 @@ const DemoSelect: React.FC<{
           return h;
         };
         setHighlight((h) => (h < 0 ? step(-1) : step(h)));
-      } else if (e.key === "Enter" && highlight >= 0 && visibleOptions[highlight]) {
+      } else if (
+        e.key === "Enter" &&
+        highlight >= 0 &&
+        visibleOptions[highlight]
+      ) {
         choose(visibleOptions[highlight]);
       }
     };
@@ -3452,7 +3951,8 @@ const DemoSelect: React.FC<{
         /* the popup is a React portal child of the trigger, so clicks on
            popup options bubble through the trigger's onClick and would
            reopen the closed popup — ignore clicks from inside the popup */
-        if (popupRef.current && popupRef.current.contains(e.target as Node)) return;
+        if (popupRef.current && popupRef.current.contains(e.target as Node))
+          return;
         openPopup();
       }}
       onKeyDown={(e) => {
@@ -3463,8 +3963,14 @@ const DemoSelect: React.FC<{
         }
       }}
     >
-      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-        {selected ? selected.label : placeholder ?? ""}
+      <span
+        style={{
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {selected ? selected.label : (placeholder ?? "")}
       </span>
       <i className="fa-solid fa-caret-down demo-select-caret"></i>
       {open && portalTarget
@@ -3479,7 +3985,12 @@ const DemoSelect: React.FC<{
                    overlay (which would close the modal) — stop them here */
                 e.stopPropagation();
               }}
-              style={{ left: pos.left, top: pos.top, width: pos.width, maxHeight: pos.height }}
+              style={{
+                left: pos.left,
+                top: pos.top,
+                width: pos.width,
+                maxHeight: pos.height,
+              }}
             >
               {options.map((opt) => (
                 <div
@@ -3492,7 +4003,8 @@ const DemoSelect: React.FC<{
                     if (!opt.disabled) choose(opt);
                   }}
                   onMouseEnter={() => {
-                    if (!opt.disabled) setHighlight(visibleOptions.indexOf(opt));
+                    if (!opt.disabled)
+                      setHighlight(visibleOptions.indexOf(opt));
                   }}
                 >
                   {opt.label}
@@ -3512,7 +4024,13 @@ const ProjectsHeader: React.FC<{
   onSortChange: (v: string) => void;
   onToggleDirection: () => void;
   onAddProject: () => void;
-}> = ({ sortBy, sortDirection, onSortChange, onToggleDirection, onAddProject }) => (
+}> = ({
+  sortBy,
+  sortDirection,
+  onSortChange,
+  onToggleDirection,
+  onAddProject,
+}) => (
   <div
     className="tab_header_content"
     style={{
@@ -3625,7 +4143,13 @@ const ProjectsHeader: React.FC<{
 
 /* ProjectModal from Projects/ProjectModal.tsx of the app (api calls and
    i18n replaced with local demo state and plain labels) */
-const PROJECT_STATUSES = ["Planned", "In Progress", "On Hold", "Completed", "Cancelled"];
+const PROJECT_STATUSES = [
+  "Planned",
+  "In Progress",
+  "On Hold",
+  "Completed",
+  "Cancelled",
+];
 
 const DemoInputField: React.FC<{
   label: string;
@@ -3634,8 +4158,18 @@ const DemoInputField: React.FC<{
   value?: string;
   name?: string;
   type?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-}> = ({ label, as = "input", className = "", value = "", name, type, onChange }) => {
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+}> = ({
+  label,
+  as = "input",
+  className = "",
+  value = "",
+  name,
+  type,
+  onChange,
+}) => {
   const Component = as === "textarea" ? "textarea" : "input";
   return (
     <Component
@@ -3650,11 +4184,21 @@ const DemoInputField: React.FC<{
 const ProjectTasksProgress: React.FC<{ boardId: string }> = ({ boardId }) => {
   const board = INITIAL_BOARDS.find((b) => b.id === boardId);
   const allTasks = board ? board.columns.flatMap((col) => col.tasks) : [];
-  const progress = allTasks.length === 0 ? 0 : (allTasks.filter((t) => t.completed).length / allTasks.length) * 100;
+  const progress =
+    allTasks.length === 0
+      ? 0
+      : (allTasks.filter((t) => t.completed).length / allTasks.length) * 100;
   return (
     <div className="project_modal_progress">
       <CircularProgressBar
-        style={{ width: "60px", height: "60px", maxWidth: "60px", padding: "0px", margin: "0px", maxHeight: "60px" }}
+        style={{
+          width: "60px",
+          height: "60px",
+          maxWidth: "60px",
+          padding: "0px",
+          margin: "0px",
+          maxHeight: "60px",
+        }}
         size={60}
         strokeWidth={10}
         progress={progress}
@@ -3664,7 +4208,10 @@ const ProjectTasksProgress: React.FC<{ boardId: string }> = ({ boardId }) => {
   );
 };
 
-const FieldLabel: React.FC<{ icon: string; children: React.ReactNode }> = ({ icon, children }) => (
+const FieldLabel: React.FC<{ icon: string; children: React.ReactNode }> = ({
+  icon,
+  children,
+}) => (
   <label className="project_modal_field_label">
     <i className={icon}></i>
     {children}
@@ -3674,13 +4221,18 @@ const FieldLabel: React.FC<{ icon: string; children: React.ReactNode }> = ({ ico
 const MEMBER_PAGE_SIZE = 50;
 const PUBLIC_PAGE_SIZE = 50;
 
-const matchesQuery = (query: string, ...fields: (string | null | undefined)[]): boolean => {
+const matchesQuery = (
+  query: string,
+  ...fields: (string | null | undefined)[]
+): boolean => {
   const q = query.trim().toLowerCase();
   if (!q) return true;
   return fields.some((f) => (f ?? "").toLowerCase().includes(q));
 };
 
-const SearchIcon: React.FC<{ color?: string }> = ({ color = "var(--fg-secondary)" }) => (
+const SearchIcon: React.FC<{ color?: string }> = ({
+  color = "var(--fg-secondary)",
+}) => (
   <i
     className="fa-solid fa-magnifying-glass"
     style={{
@@ -3703,7 +4255,15 @@ const ProjectMembersModal: React.FC<{
   onAddMember: (email: string) => void;
   onRemoveMember: (userId: number) => void;
   onClose: () => void;
-}> = ({ projectId, projectTitle, ownerId, members, onAddMember, onRemoveMember, onClose }) => {
+}> = ({
+  projectId,
+  projectTitle,
+  ownerId,
+  members,
+  onAddMember,
+  onRemoveMember,
+  onClose,
+}) => {
   const [newEmail, setNewEmail] = useState("");
   const [error, setError] = useState("");
   const [memberSearch, setMemberSearch] = useState("");
@@ -3712,22 +4272,34 @@ const ProjectMembersModal: React.FC<{
   const [publicLimit, setPublicLimit] = useState(PUBLIC_PAGE_SIZE);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const isOwner = (member: DemoProjectMember): boolean => member.role === "OWNER";
+  const isOwner = (member: DemoProjectMember): boolean =>
+    member.role === "OWNER";
   const isCurrentUserOwner = (): boolean => ownerId === 1;
-  const canRemoveMember = (member: DemoProjectMember): boolean => isCurrentUserOwner() && !isOwner(member);
+  const canRemoveMember = (member: DemoProjectMember): boolean =>
+    isCurrentUserOwner() && !isOwner(member);
 
   const availablePublicUsers = useMemo(
-    () => DEMO_PUBLIC_USERS.filter((u) => !members.some((m) => m.email.toLowerCase() === u.email.toLowerCase())),
+    () =>
+      DEMO_PUBLIC_USERS.filter(
+        (u) =>
+          !members.some((m) => m.email.toLowerCase() === u.email.toLowerCase()),
+      ),
     [members],
   );
 
   const filteredMembers = useMemo(
-    () => members.filter((member) => matchesQuery(memberSearch, member.name, member.email)),
+    () =>
+      members.filter((member) =>
+        matchesQuery(memberSearch, member.name, member.email),
+      ),
     [members, memberSearch],
   );
 
   const filteredPublicUsers = useMemo(
-    () => availablePublicUsers.filter((user) => matchesQuery(publicSearch, user.name, user.email)),
+    () =>
+      availablePublicUsers.filter((user) =>
+        matchesQuery(publicSearch, user.name, user.email),
+      ),
     [availablePublicUsers, publicSearch],
   );
 
@@ -3779,17 +4351,36 @@ const ProjectMembersModal: React.FC<{
       <motion.div
         className="project-modal-content"
         ref={contentRef}
-        style={{ width: "calc(90% - var(--spacing-xxl) - var(--spacing-xxl))", justifyContent: "flex-start" }}
+        style={{
+          width: "calc(90% - var(--spacing-xxl) - var(--spacing-xxl))",
+          justifyContent: "flex-start",
+        }}
         initial={{ opacity: 0, y: -200 }}
         exit={{ opacity: 0, y: -200 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <button className="modal_close_button" onClick={onClose} aria-label="Close" title="Close">
+        <button
+          className="modal_close_button"
+          onClick={onClose}
+          aria-label="Close"
+          title="Close"
+        >
           <i className="fa-solid fa-xmark"></i>
         </button>
-        <div style={{ display: "flex", flexDirection: "row", alignContent: "center", alignItems: "center", justifyContent: "flex-start" }}>
-          <p className="project_title" style={{ textAlign: "left", width: "auto" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <p
+            className="project_title"
+            style={{ textAlign: "left", width: "auto" }}
+          >
             {projectTitle}
           </p>
         </div>
@@ -3811,10 +4402,20 @@ const ProjectMembersModal: React.FC<{
           <div className="project-members-column">
             <p style={{ fontWeight: 500, fontSize: "var(--text-lg)" }}>
               Members{" "}
-              <span style={{ color: "var(--fg-secondary)", fontWeight: 400 }}>({members.length})</span>
+              <span style={{ color: "var(--fg-secondary)", fontWeight: 400 }}>
+                ({members.length})
+              </span>
             </p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-s)", width: "100%", minHeight: 0 }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--spacing-s)",
+                width: "100%",
+                minHeight: 0,
+              }}
+            >
               <div style={{ position: "relative", width: "100%" }}>
                 <SearchIcon />
                 <input
@@ -3828,7 +4429,13 @@ const ProjectMembersModal: React.FC<{
                 />
               </div>
               {filteredMembers.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "var(--spacing-l)", color: "var(--fg-secondary)" }}>
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "var(--spacing-l)",
+                    color: "var(--fg-secondary)",
+                  }}
+                >
                   {members.length === 0 ? "No members" : "No members found"}
                 </div>
               ) : (
@@ -3844,13 +4451,22 @@ const ProjectMembersModal: React.FC<{
                         flexShrink: 0,
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-m)", minWidth: 0 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "var(--spacing-m)",
+                          minWidth: 0,
+                        }}
+                      >
                         <div
                           style={{
                             width: "50px",
                             height: "50px",
                             borderRadius: "50%",
-                            backgroundColor: isOwner(member) ? "var(--red)" : "var(--green)",
+                            backgroundColor: isOwner(member)
+                              ? "var(--red)"
+                              : "var(--green)",
                             color: "var(--bg)",
                             display: "flex",
                             flexDirection: "column",
@@ -3863,7 +4479,9 @@ const ProjectMembersModal: React.FC<{
                             flexShrink: 0,
                           }}
                         >
-                          {member.name ? member.name.charAt(0).toUpperCase() : "?"}
+                          {member.name
+                            ? member.name.charAt(0).toUpperCase()
+                            : "?"}
                         </div>
                         <div
                           style={{
@@ -3874,11 +4492,32 @@ const ProjectMembersModal: React.FC<{
                             minWidth: 0,
                           }}
                         >
-                          <div style={{ fontWeight: 500, fontSize: "var(--text-lg)" }}>{member.name || "Unknown"}</div>
-                          <div style={{ fontSize: "var(--text-base)", color: "var(--fg-secondary)" }}>{member.email}</div>
+                          <div
+                            style={{
+                              fontWeight: 500,
+                              fontSize: "var(--text-lg)",
+                            }}
+                          >
+                            {member.name || "Unknown"}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "var(--text-base)",
+                              color: "var(--fg-secondary)",
+                            }}
+                          >
+                            {member.email}
+                          </div>
                         </div>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-m)", flexShrink: 0 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "var(--spacing-m)",
+                          flexShrink: 0,
+                        }}
+                      >
                         {canRemoveMember(member) && (
                           <button
                             className="button"
@@ -3895,7 +4534,10 @@ const ProjectMembersModal: React.FC<{
                             }}
                             title="Remove member"
                           >
-                            <i className="fa-solid fa-trash" style={{ margin: "0px", padding: "0px" }}></i>
+                            <i
+                              className="fa-solid fa-trash"
+                              style={{ margin: "0px", padding: "0px" }}
+                            ></i>
                           </button>
                         )}
                         <span
@@ -3909,7 +4551,9 @@ const ProjectMembersModal: React.FC<{
                             alignItems: "center",
                             textAlign: "center",
                             justifyContent: "center",
-                            backgroundColor: isOwner(member) ? "var(--red)" : "var(--green)",
+                            backgroundColor: isOwner(member)
+                              ? "var(--red)"
+                              : "var(--green)",
                             color: "var(--bg)",
                           }}
                         >
@@ -3921,7 +4565,13 @@ const ProjectMembersModal: React.FC<{
                 </div>
               )}
               {filteredMembers.length > memberLimit && (
-                <button className="button" onClick={() => setMemberLimit((limit) => limit + MEMBER_PAGE_SIZE)} style={{ width: "100%" }}>
+                <button
+                  className="button"
+                  onClick={() =>
+                    setMemberLimit((limit) => limit + MEMBER_PAGE_SIZE)
+                  }
+                  style={{ width: "100%" }}
+                >
                   Show more ({filteredMembers.length - memberLimit})
                 </button>
               )}
@@ -3931,9 +4581,18 @@ const ProjectMembersModal: React.FC<{
           <div className="project-users-column">
             <p style={{ fontWeight: 500, fontSize: "var(--text-lg)" }}>
               Public users{" "}
-              <span style={{ color: "var(--fg-secondary)", fontWeight: 400 }}>({availablePublicUsers.length})</span>
+              <span style={{ color: "var(--fg-secondary)", fontWeight: 400 }}>
+                ({availablePublicUsers.length})
+              </span>
             </p>
-            <div style={{ display: "flex", flexDirection: "row", gap: "var(--spacing-m)", width: "calc(100% - var(--padding-s))" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "var(--spacing-m)",
+                width: "calc(100% - var(--padding-s))",
+              }}
+            >
               <DemoInputField
                 label="Member email"
                 value={newEmail}
@@ -3952,11 +4611,25 @@ const ProjectMembersModal: React.FC<{
               </button>
             </div>
             {availablePublicUsers.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "var(--spacing-l)", color: "var(--fg-secondary)" }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "var(--spacing-l)",
+                  color: "var(--fg-secondary)",
+                }}
+              >
                 No public users
               </div>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-s)", width: "100%", minHeight: 0 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--spacing-s)",
+                  width: "100%",
+                  minHeight: 0,
+                }}
+              >
                 <div style={{ position: "relative", width: "100%" }}>
                   <SearchIcon />
                   <input
@@ -3964,13 +4637,20 @@ const ProjectMembersModal: React.FC<{
                     value={publicSearch}
                     onChange={(e) => setPublicSearch(e.target.value)}
                     style={{
-                      width: "calc(100% - calc(var(--spacing-l) - var(--spacing-s)))",
+                      width:
+                        "calc(100% - calc(var(--spacing-l) - var(--spacing-s)))",
                       paddingLeft: "calc(var(--spacing-xl) + var(--spacing-s))",
                     }}
                   />
                 </div>
                 {filteredPublicUsers.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "var(--spacing-l)", color: "var(--fg-secondary)" }}>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      padding: "var(--spacing-l)",
+                      color: "var(--fg-secondary)",
+                    }}
+                  >
                     No users found
                   </div>
                 ) : (
@@ -3986,7 +4666,14 @@ const ProjectMembersModal: React.FC<{
                           flexShrink: 0,
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-m)", minWidth: 0 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "var(--spacing-m)",
+                            minWidth: 0,
+                          }}
+                        >
                           <div
                             style={{
                               width: "50px",
@@ -4005,11 +4692,35 @@ const ProjectMembersModal: React.FC<{
                               flexShrink: 0,
                             }}
                           >
-                            {user.name ? user.name.charAt(0).toUpperCase() : "?"}
+                            {user.name
+                              ? user.name.charAt(0).toUpperCase()
+                              : "?"}
                           </div>
-                          <div style={{ display: "flex", flexDirection: "column", width: "auto", gap: "5px", minWidth: 0 }}>
-                            <div style={{ fontWeight: 500, fontSize: "var(--text-lg)" }}>{user.name || "Unknown"}</div>
-                            <div style={{ fontSize: "var(--text-base)", color: "var(--fg-secondary)" }}>{user.email}</div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              width: "auto",
+                              gap: "5px",
+                              minWidth: 0,
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontWeight: 500,
+                                fontSize: "var(--text-lg)",
+                              }}
+                            >
+                              {user.name || "Unknown"}
+                            </div>
+                            <div
+                              style={{
+                                fontSize: "var(--text-base)",
+                                color: "var(--fg-secondary)",
+                              }}
+                            >
+                              {user.email}
+                            </div>
                           </div>
                         </div>
                         <button
@@ -4029,14 +4740,23 @@ const ProjectMembersModal: React.FC<{
                           }}
                           title="Add member"
                         >
-                          <i className="fa-solid fa-plus" style={{ margin: "0px", padding: "0px" }}></i>
+                          <i
+                            className="fa-solid fa-plus"
+                            style={{ margin: "0px", padding: "0px" }}
+                          ></i>
                         </button>
                       </div>
                     ))}
                   </div>
                 )}
                 {filteredPublicUsers.length > publicLimit && (
-                  <button className="button" onClick={() => setPublicLimit((limit) => limit + PUBLIC_PAGE_SIZE)} style={{ width: "100%" }}>
+                  <button
+                    className="button"
+                    onClick={() =>
+                      setPublicLimit((limit) => limit + PUBLIC_PAGE_SIZE)
+                    }
+                    style={{ width: "100%" }}
+                  >
                     Show more ({filteredPublicUsers.length - publicLimit})
                   </button>
                 )}
@@ -4046,7 +4766,12 @@ const ProjectMembersModal: React.FC<{
         </div>
 
         <div className="modal-actions">
-          <button className="button" id="green" onClick={onClose} style={{ width: "60%" }}>
+          <button
+            className="button"
+            id="green"
+            onClick={onClose}
+            style={{ width: "60%" }}
+          >
             <i className="fa-solid fa-sd-card"></i> Save
           </button>
         </div>
@@ -4074,12 +4799,18 @@ const ProjectModal: React.FC<{
     user_id: project.user_id ?? 1,
     members: project.members || [],
   });
-  const [members, setMembers] = useState<DemoProjectMember[]>(project.members || []);
+  const [members, setMembers] = useState<DemoProjectMember[]>(
+    project.members || [],
+  );
   const [membersModalOpen, setMembersModalOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const statusColor = getStatusColor(formData.status);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -4127,7 +4858,12 @@ const ProjectModal: React.FC<{
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <button className="modal_close_button" onClick={onClose} aria-label="Close" title="Close">
+        <button
+          className="modal_close_button"
+          onClick={onClose}
+          aria-label="Close"
+          title="Close"
+        >
           <i className="fa-solid fa-xmark"></i>
         </button>
         <div className="project_modal_body">
@@ -4146,7 +4882,9 @@ const ProjectModal: React.FC<{
             <div className="project_modal_field project_modal_about">
               <MarkdownEditor
                 value={formData.about ?? ""}
-                onChange={(markdown) => setFormData((prev) => ({ ...prev, about: markdown }))}
+                onChange={(markdown) =>
+                  setFormData((prev) => ({ ...prev, about: markdown }))
+                }
                 editable={formData.is_owner}
                 placeholder="About project"
               />
@@ -4158,7 +4896,9 @@ const ProjectModal: React.FC<{
               <FieldLabel icon="fa-solid fa-chart-simple">Status</FieldLabel>
               <DemoSelect
                 value={formData.status}
-                onChange={(v) => setFormData((prev) => ({ ...prev, status: v }))}
+                onChange={(v) =>
+                  setFormData((prev) => ({ ...prev, status: v }))
+                }
                 ariaLabel="Project status"
                 placeholder="Select status"
                 triggerStyle={{
@@ -4183,7 +4923,12 @@ const ProjectModal: React.FC<{
               <FieldLabel icon="fa-solid fa-brain">Priority</FieldLabel>
               <DemoSelect
                 value={formData.priority}
-                onChange={(v) => setFormData((prev) => ({ ...prev, priority: v as DemoProject["priority"] }))}
+                onChange={(v) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    priority: v as DemoProject["priority"],
+                  }))
+                }
                 ariaLabel="Project priority"
                 placeholder="Select priority"
                 triggerStyle={{
@@ -4193,11 +4938,13 @@ const ProjectModal: React.FC<{
                   height: "40px",
                   textAlign: "left",
                 }}
-                options={(["low", "medium", "high"] as const).map((priority) => ({
-                  value: priority,
-                  label: priority,
-                  color: getPriorityColor(priority),
-                }))}
+                options={(["low", "medium", "high"] as const).map(
+                  (priority) => ({
+                    value: priority,
+                    label: priority,
+                    color: getPriorityColor(priority),
+                  }),
+                )}
               />
             </div>
 
@@ -4219,13 +4966,18 @@ const ProjectModal: React.FC<{
               <FieldLabel icon="fa-solid fa-check-double">Board</FieldLabel>
               <DemoSelect
                 value={formData.board_id ?? ""}
-                onChange={(v) => setFormData((prev) => ({ ...prev, board_id: v }))}
+                onChange={(v) =>
+                  setFormData((prev) => ({ ...prev, board_id: v }))
+                }
                 ariaLabel="Project board"
                 placeholder="SELECT BOARD"
                 triggerStyle={{ width: "100%", height: "40px" }}
                 options={[
                   { value: "", label: "SELECT BOARD", disabled: true },
-                  ...INITIAL_BOARDS.map((board) => ({ value: board.id, label: board.title })),
+                  ...INITIAL_BOARDS.map((board) => ({
+                    value: board.id,
+                    label: board.title,
+                  })),
                 ]}
               />
             </div>
@@ -4249,7 +5001,12 @@ const ProjectModal: React.FC<{
               <button
                 className="button"
                 onClick={() => setMembersModalOpen(true)}
-                style={{ height: "34px", padding: "0 var(--spacing-m)", whiteSpace: "nowrap", flexShrink: 0 }}
+                style={{
+                  height: "34px",
+                  padding: "0 var(--spacing-m)",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                }}
               >
                 <i className="fa-solid fa-user-gear"></i> Manage members
               </button>
@@ -4273,14 +5030,26 @@ const ProjectModal: React.FC<{
                   ))}
                 </>
               ) : (
-                <span style={{ fontSize: "var(--text-sm)", color: "var(--fg-secondary)" }}>No members</span>
+                <span
+                  style={{
+                    fontSize: "var(--text-sm)",
+                    color: "var(--fg-secondary)",
+                  }}
+                >
+                  No members
+                </span>
               )}
             </div>
           </div>
         </div>
 
         <div className="modal-actions">
-          <button className="button" id="green" onClick={handleSave} style={{ width: "60%" }}>
+          <button
+            className="button"
+            id="green"
+            onClick={handleSave}
+            style={{ width: "60%" }}
+          >
             <i className="fa-solid fa-sd-card"></i> Save
           </button>
         </div>
@@ -4296,10 +5065,17 @@ const ProjectModal: React.FC<{
             onAddMember={(email) => {
               setMembers((prev) => [
                 ...prev,
-                { user_id: Date.now(), name: email.split("@")[0], email, role: "MEMBER" },
+                {
+                  user_id: Date.now(),
+                  name: email.split("@")[0],
+                  email,
+                  role: "MEMBER",
+                },
               ]);
             }}
-            onRemoveMember={(userId) => setMembers((prev) => prev.filter((m) => m.user_id !== userId))}
+            onRemoveMember={(userId) =>
+              setMembers((prev) => prev.filter((m) => m.user_id !== userId))
+            }
             onClose={() => setMembersModalOpen(false)}
           />
         )}
@@ -4319,10 +5095,22 @@ const ContextMenu: React.FC<{
   onClose: () => void;
   onSourceCode: () => void;
   onManageMembers?: () => void;
-}> = ({ position, onDelete, onEdit, onClose, onSourceCode, onManageMembers }) => (
+}> = ({
+  position,
+  onDelete,
+  onEdit,
+  onClose,
+  onSourceCode,
+  onManageMembers,
+}) => (
   <motion.div
     className="context-menu"
-    style={{ position: "absolute", top: position.top - 50, left: position.left, zIndex: 20 }}
+    style={{
+      position: "absolute",
+      top: position.top - 50,
+      left: position.left,
+      zIndex: 20,
+    }}
     onMouseLeave={onClose}
     initial={{ opacity: 0, y: -10 }}
     animate={{ opacity: 1, y: 0 }}
@@ -4343,7 +5131,10 @@ const ContextMenu: React.FC<{
       </button>
     )}
 
-    <div className="spacer" style={{ backgroundColor: "var(--fg)", height: "1px" }}></div>
+    <div
+      className="spacer"
+      style={{ backgroundColor: "var(--fg)", height: "1px" }}
+    ></div>
 
     <button className="menu_button" onClick={onDelete}>
       <i className="fa-solid fa-trash"></i> Delete
@@ -4355,9 +5146,16 @@ const ProjectsTab: React.FC = () => {
   const [projects, setProjects] = useState<DemoProject[]>(INITIAL_PROJECTS);
   const [sortBy, setSortBy] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const [editingProject, setEditingProject] = useState<DemoProject | null>(null);
-  const [contextMenu, setContextMenu] = useState<{ project: DemoProject; position: { top: number; left: number } } | null>(null);
-  const [membersProject, setMembersProject] = useState<DemoProject | null>(null);
+  const [editingProject, setEditingProject] = useState<DemoProject | null>(
+    null,
+  );
+  const [contextMenu, setContextMenu] = useState<{
+    project: DemoProject;
+    position: { top: number; left: number };
+  } | null>(null);
+  const [membersProject, setMembersProject] = useState<DemoProject | null>(
+    null,
+  );
 
   const sortedProjects = useMemo(() => {
     if (!sortBy) return [...projects];
@@ -4365,15 +5163,23 @@ const ProjectsTab: React.FC = () => {
     const sortedDev = [...projects].sort((a, b) => {
       let comparison = 0;
       if (sortBy === "status") {
-        const statusOrder = ["Planned", "In Progress", "On Hold", "Completed", "Cancelled"];
-        comparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+        const statusOrder = [
+          "Planned",
+          "In Progress",
+          "On Hold",
+          "Completed",
+          "Cancelled",
+        ];
+        comparison =
+          statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
       } else if (sortBy === "priority") {
         const priorityOrder = ["low", "medium", "high"];
         comparison =
           priorityOrder.indexOf(a.priority.toLowerCase()) -
           priorityOrder.indexOf(b.priority.toLowerCase());
       } else if (sortBy === "deadline") {
-        comparison = new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+        comparison =
+          new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
       }
       return sortDirection === "asc" ? comparison : -comparison;
     });
@@ -4402,20 +5208,26 @@ const ProjectsTab: React.FC = () => {
     setSortBy("");
   };
 
-  const openProjectContextMenu = (project: DemoProject) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    const demo = (e.currentTarget as HTMLElement).closest(".owl-demo") as HTMLElement | null;
-    if (!demo) return;
-    const rect = demo.getBoundingClientRect();
-    const scale = rect.width > 0 && demo.offsetWidth > 0 ? rect.width / demo.offsetWidth : 1;
-    setContextMenu({
-      project,
-      position: {
-        top: (e.clientY - rect.top) / scale,
-        left: (e.clientX - rect.left) / scale,
-      },
-    });
-  };
+  const openProjectContextMenu =
+    (project: DemoProject) => (e: React.MouseEvent) => {
+      e.preventDefault();
+      const demo = (e.currentTarget as HTMLElement).closest(
+        ".owl-demo",
+      ) as HTMLElement | null;
+      if (!demo) return;
+      const rect = demo.getBoundingClientRect();
+      const scale =
+        rect.width > 0 && demo.offsetWidth > 0
+          ? rect.width / demo.offsetWidth
+          : 1;
+      setContextMenu({
+        project,
+        position: {
+          top: (e.clientY - rect.top) / scale,
+          left: (e.clientX - rect.left) / scale,
+        },
+      });
+    };
 
   const handleDeleteProject = (projectId: string) => {
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
@@ -4423,7 +5235,8 @@ const ProjectsTab: React.FC = () => {
   };
 
   const handleOpenSourceCode = (project: DemoProject) => {
-    if (project.link_to) window.open(project.link_to, "_blank", "noopener,noreferrer");
+    if (project.link_to)
+      window.open(project.link_to, "_blank", "noopener,noreferrer");
     setContextMenu(null);
   };
 
@@ -4449,7 +5262,11 @@ const ProjectsTab: React.FC = () => {
           if (!projectId) return;
           const fromIndex = sortedProjects.findIndex((p) => p.id === projectId);
           if (fromIndex === -1) return;
-          const toIndex = indexOfChildAtPoint(e.currentTarget as HTMLElement, e.clientY, "y");
+          const toIndex = indexOfChildAtPoint(
+            e.currentTarget as HTMLElement,
+            e.clientY,
+            "y",
+          );
           let finalTo = toIndex;
           if (fromIndex < finalTo) finalTo -= 1;
           handleReorder(fromIndex, finalTo);
@@ -4494,7 +5311,9 @@ const ProjectsTab: React.FC = () => {
           <ProjectModal
             project={editingProject}
             onSave={(updated) =>
-              setProjects((prev) => prev.map((p) => (p.id === updated.id ? updated : p)))
+              setProjects((prev) =>
+                prev.map((p) => (p.id === updated.id ? updated : p)),
+              )
             }
             onClose={() => setEditingProject(null)}
           />
@@ -4515,7 +5334,12 @@ const ProjectsTab: React.FC = () => {
                         ...p,
                         members: [
                           ...(p.members ?? []),
-                          { user_id: Date.now(), name: email.split("@")[0], email, role: "MEMBER" },
+                          {
+                            user_id: Date.now(),
+                            name: email.split("@")[0],
+                            email,
+                            role: "MEMBER",
+                          },
                         ],
                       }
                     : p,
@@ -4526,7 +5350,12 @@ const ProjectsTab: React.FC = () => {
               setProjects((prev) =>
                 prev.map((p) =>
                   p.id === membersProject.id
-                    ? { ...p, members: (p.members ?? []).filter((m) => m.user_id !== userId) }
+                    ? {
+                        ...p,
+                        members: (p.members ?? []).filter(
+                          (m) => m.user_id !== userId,
+                        ),
+                      }
                     : p,
                 ),
               )
@@ -4577,12 +5406,31 @@ interface DemoSubscriptionPlan {
 }
 
 const DEMO_SUBSCRIPTION_PLANS: DemoSubscriptionPlan[] = [
-  { id: 1, name: "Starter", about: "For individuals starting out", price: 4.99 },
-  { id: 2, name: "Pro", about: "Everything you need for power users", price: 9.99 },
-  { id: 3, name: "Enterprise", about: "For teams and organizations", price: null },
+  {
+    id: 1,
+    name: "Starter",
+    about: "For individuals starting out",
+    price: 4.99,
+  },
+  {
+    id: 2,
+    name: "Pro",
+    about: "Everything you need for power users",
+    price: 9.99,
+  },
+  {
+    id: 3,
+    name: "Enterprise",
+    about: "For teams and organizations",
+    price: null,
+  },
 ];
 
-const SubPlanCard: React.FC<DemoSubscriptionPlan> = ({ name, about, price }) => (
+const SubPlanCard: React.FC<DemoSubscriptionPlan> = ({
+  name,
+  about,
+  price,
+}) => (
   <motion.button
     className="subs-card"
     initial={{ opacity: 0, y: 20 }}
@@ -4599,18 +5447,32 @@ const SubPlanCard: React.FC<DemoSubscriptionPlan> = ({ name, about, price }) => 
   </motion.button>
 );
 
-const SubscriptionPlanModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+const SubscriptionPlanModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+}> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
     <motion.div
       className="modal"
-      style={{ height: "100%", width: "100%", zIndex: 1000, background: "var(--bg)", userSelect: "none", padding: "0px", margin: "0px" }}
+      style={{
+        height: "100%",
+        width: "100%",
+        zIndex: 1000,
+        background: "var(--bg)",
+        userSelect: "none",
+        padding: "0px",
+        margin: "0px",
+      }}
       initial={{ opacity: 0, y: -100 }}
       exit={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="login_modal centered_content" style={{ overflowY: "auto", gap: 0 }}>
+      <div
+        className="login_modal centered_content"
+        style={{ overflowY: "auto", gap: 0 }}
+      >
         <div
           style={{
             display: "flex",
@@ -4628,8 +5490,21 @@ const SubscriptionPlanModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
               <SubPlanCard key={sub.id} {...sub} />
             ))}
           </div>
-          <div style={{ display: "flex", gap: "var(--spacing-s)", justifyContent: "center", width: "100%", padding: "0px", margin: "0px" }}>
-            <button className="button" onClick={onClose} style={{ width: "100%", margin: "0px" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "var(--spacing-s)",
+              justifyContent: "center",
+              width: "100%",
+              padding: "0px",
+              margin: "0px",
+            }}
+          >
+            <button
+              className="button"
+              onClick={onClose}
+              style={{ width: "100%", margin: "0px" }}
+            >
               Close
             </button>
           </div>
@@ -4639,7 +5514,9 @@ const SubscriptionPlanModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
   );
 };
 
-const AccountControl: React.FC<{ onOpenSubPlan: () => void }> = ({ onOpenSubPlan }) => (
+const AccountControl: React.FC<{ onOpenSubPlan: () => void }> = ({
+  onOpenSubPlan,
+}) => (
   <div
     style={{
       display: "flex",
@@ -4678,11 +5555,29 @@ const AccountTab: React.FC = () => {
     <div
       className="tab-content centered_content"
       id="account_block"
-      style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "var(--spacing-l)" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "var(--spacing-l)",
+      }}
     >
-      <div style={{ display: "flex", flexDirection: "column", alignContent: "center", alignItems: "center", justifyContent: "center", gap: "var(--spacing-l)" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "var(--spacing-l)",
+        }}
+      >
         <div className="account_info_grid">
-          <div className="account_info_block centered_content" style={{ backgroundColor: "var(--bg2)" }}>
+          <div
+            className="account_info_block centered_content"
+            style={{ backgroundColor: "var(--bg2)" }}
+          >
             <div
               style={{
                 width: "100%",
@@ -4694,27 +5589,69 @@ const AccountTab: React.FC = () => {
                 alignItems: "center",
               }}
             ></div>
-            <i className="fa-regular fa-circle-user centered_content" style={{ fontSize: "200px", padding: "0px", margin: "0px", flex: "1" }} />
-            <button className="username" style={{ cursor: "text", color: "var(--fg)" }} onClick={() => undefined}>
+            <i
+              className="fa-regular fa-circle-user centered_content"
+              style={{
+                fontSize: "200px",
+                padding: "0px",
+                margin: "0px",
+                flex: "1",
+              }}
+            />
+            <button
+              className="username"
+              style={{ cursor: "text", color: "var(--fg)" }}
+              onClick={() => undefined}
+            >
               @nighty
             </button>
-            <p style={{ fontSize: "medium", fontWeight: "bolder", opacity: "0.7" }}>nighty@owl.app</p>
+            <p
+              style={{
+                fontSize: "medium",
+                fontWeight: "bolder",
+                opacity: "0.7",
+              }}
+            >
+              nighty@owl.app
+            </p>
           </div>
-          <div className="account_info_block" style={{ backgroundColor: "var(--bg2)" }}>
+          <div
+            className="account_info_block"
+            style={{ backgroundColor: "var(--bg2)" }}
+          >
             <div className="spacer" style={{ height: "40px" }}></div>
-            <h1 className="centered_content" style={{ fontSize: "120px", flex: "1" }}>
+            <h1
+              className="centered_content"
+              style={{ fontSize: "120px", flex: "1" }}
+            >
               $9.99
             </h1>
-            <p className="username" style={{ fontSize: "x-large", fontWeight: "bolder" }}>
+            <p
+              className="username"
+              style={{ fontSize: "x-large", fontWeight: "bolder" }}
+            >
               Pro
             </p>
-            <p style={{ fontSize: "medium", fontWeight: "bolder", opacity: "0.7" }}>Days before: 27</p>
+            <p
+              style={{
+                fontSize: "medium",
+                fontWeight: "bolder",
+                opacity: "0.7",
+              }}
+            >
+              Days before: 27
+            </p>
           </div>
         </div>
         <AccountControl onOpenSubPlan={() => setIsChangeSubOpen(true)} />
       </div>
       <AnimatePresence>
-        {isChangeSubOpen && <SubscriptionPlanModal isOpen={isChangeSubOpen} onClose={() => setIsChangeSubOpen(false)} />}
+        {isChangeSubOpen && (
+          <SubscriptionPlanModal
+            isOpen={isChangeSubOpen}
+            onClose={() => setIsChangeSubOpen(false)}
+          />
+        )}
       </AnimatePresence>
     </div>
   );
@@ -4733,10 +5670,18 @@ const SettingsTab: React.FC = () => (
               <i className="fa-solid fa-user"></i> Account
             </h2>
             <div className="settings_item" style={{ width: "100%" }}>
-              <label className="settings_item_title" htmlFor="public_account_checkbox">
+              <label
+                className="settings_item_title"
+                htmlFor="public_account_checkbox"
+              >
                 <i className="fa-solid fa-user"></i> Public account
               </label>
-              <input id="public_account_checkbox" type="checkbox" className="checkbox" defaultChecked />
+              <input
+                id="public_account_checkbox"
+                type="checkbox"
+                className="checkbox"
+                defaultChecked
+              />
             </div>
           </div>
           <div className="settings_list">
@@ -4762,7 +5707,19 @@ const SettingsTab: React.FC = () => (
                 <option value="" disabled>
                   Select font
                 </option>
-                {["Merienda", "Caveat", "Gochi Hand", "Noto Sans", "Noto Serif", "Roboto Condensed", "Roboto", "Space Grotesk", "Ubuntu Mono", "Ubuntu", "system-ui"].map((font) => (
+                {[
+                  "Merienda",
+                  "Caveat",
+                  "Gochi Hand",
+                  "Noto Sans",
+                  "Noto Serif",
+                  "Roboto Condensed",
+                  "Roboto",
+                  "Space Grotesk",
+                  "Ubuntu Mono",
+                  "Ubuntu",
+                  "system-ui",
+                ].map((font) => (
                   <option key={font} value={font}>
                     {font}
                   </option>
@@ -4793,10 +5750,19 @@ const SettingsTab: React.FC = () => (
               </select>
             </div>
             <div className="settings_item" style={{ width: "100%" }}>
-              <label className="settings_item_title" htmlFor="animations_checkbox">
-                <i className="fa-solid fa-arrows-left-right-to-line"></i> Disable animations (restart)
+              <label
+                className="settings_item_title"
+                htmlFor="animations_checkbox"
+              >
+                <i className="fa-solid fa-arrows-left-right-to-line"></i>{" "}
+                Disable animations (restart)
               </label>
-              <input id="animations_checkbox" type="checkbox" className="checkbox" defaultChecked />
+              <input
+                id="animations_checkbox"
+                type="checkbox"
+                className="checkbox"
+                defaultChecked
+              />
             </div>
           </div>
           <div className="settings_list">
@@ -4807,13 +5773,23 @@ const SettingsTab: React.FC = () => (
               <label className="settings_item_title">
                 <i className="fa-solid fa-briefcase"></i> Work time
               </label>
-              <input type="number" defaultValue={25} style={{ width: "100%" }} min="1" />
+              <input
+                type="number"
+                defaultValue={25}
+                style={{ width: "100%" }}
+                min="1"
+              />
             </div>
             <div className="settings_item" style={{ width: "100%" }}>
               <label className="settings_item_title">
                 <i className="fa-solid fa-bed"></i> Break time
               </label>
-              <input type="number" defaultValue={5} style={{ width: "100%" }} min="1" />
+              <input
+                type="number"
+                defaultValue={5}
+                style={{ width: "100%" }}
+                min="1"
+              />
             </div>
           </div>
           <div className="settings_list">
@@ -4834,16 +5810,27 @@ const SettingsTab: React.FC = () => (
               <i className="fa-solid fa-rotate"></i> Updates
             </h2>
             <div className="settings_item">
-              <button className="button" style={{ width: "100%" }} onClick={() => undefined}>
+              <button
+                className="button"
+                style={{ width: "100%" }}
+                onClick={() => undefined}
+              >
                 <i className="fa-solid fa-rotate-right" /> Check for updates
               </button>
             </div>
             <div className="settings_item">
-              <button className="button" style={{ width: "100%" }} onClick={() => undefined}>
+              <button
+                className="button"
+                style={{ width: "100%" }}
+                onClick={() => undefined}
+              >
                 <i className="fa-solid fa-file-lines" /> Third party notices
               </button>
             </div>
-            <p className="version centered_content" style={{ textAlign: "center", opacity: "0.6" }}>
+            <p
+              className="version centered_content"
+              style={{ textAlign: "center", opacity: "0.6" }}
+            >
               App version: 1.3.2-alpha
             </p>
           </div>
