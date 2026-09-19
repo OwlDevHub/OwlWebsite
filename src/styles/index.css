@@ -22,7 +22,7 @@
   --border: rgba(237, 236, 236, 0.06);
   --border-02: rgba(237, 236, 236, 0.06);
   --hairline: rgba(237, 236, 236, 0.05);
-  --green: #7cc98b;
+  --green: #c9b27c; /* gold-green, matches app/demo palette */
   --red: #e08585;
   --yellow: #e0c17c;
   --serif: #e8e0d2;
@@ -983,6 +983,14 @@ hw {
 }
 
 /* CLI window content */
+.cli-window-w {
+  background: var(--bg);
+}
+
+.cli-window-w .product-window__bar {
+  background: var(--bg);
+}
+
 .cli-window {
   padding: 0.75rem 0.875rem 0.875rem;
   font-family: var(--font-mono);
@@ -1932,6 +1940,11 @@ hw {
 .sync-window {
   position: relative;
   width: 100%;
+  background: var(--bg);
+}
+
+.sync-window .product-window__bar {
+  background: var(--bg);
 }
 
 .sync-stage {
@@ -1951,7 +1964,7 @@ hw {
 }
 
 .sync-stage__lines line {
-  stroke: var(--border-02);
+  stroke: color-mix(in srgb, var(--yellow) 35%, transparent);
   stroke-width: 1;
   stroke-dasharray: 4 6;
   animation: sync-dash 3s linear infinite;
@@ -1980,17 +1993,17 @@ hw {
   justify-content: center;
   width: 44px;
   height: 44px;
-  background: var(--chrome);
-  border: 1px solid var(--border-02);
+  background: var(--bg);
+  border: 1px solid color-mix(in srgb, var(--yellow) 45%, transparent);
   border-radius: 10px;
   font-size: 1.1rem;
-  color: var(--fg);
+  color: var(--yellow);
 }
 
 .sync-stage__ripple {
   position: absolute;
   inset: 0;
-  border: 1px solid var(--border-02);
+  border: 1px solid color-mix(in srgb, var(--yellow) 40%, transparent);
   border-radius: inherit;
   pointer-events: none;
 }

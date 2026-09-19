@@ -18,7 +18,7 @@ const DemoBadge = () => (
 );
 
 const CliWindow = ({ lines }) => (
-  <div className="product-window">
+  <div className="product-window cli-window-w">
     <div className="product-window__bar">
       <span className="product-window__dot" />
       <span className="product-window__dot" />
