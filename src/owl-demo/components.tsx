@@ -181,7 +181,7 @@ const PomodoroModal: React.FC<{
         position: "fixed",
         top: "0px",
         flexDirection: "row",
-        left: "calc(50vw - 250px - var(--spacing-s) - var(--spacing-s))",
+        left: "calc(50% - 250px - var(--spacing-s) - var(--spacing-s))",
         zIndex: 100,
         cursor: "auto",
         gap: "10%",
@@ -390,52 +390,68 @@ const DemoPomodoroTimer: React.FC = () => {
 
   return (
     <>
-      {isRunning ? (
-        <button
-          onClick={toggleModal}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "transparent",
-            backdropFilter: "blur(10px)",
-            borderRadius: "var(--spacing-l)",
-            height: "40px",
-            width: "auto",
-            cursor: "pointer",
-            position: "relative",
-            color: "var(--fg)",
-            fontSize: "medium",
-            gap: "var(--spacing-s)",
-            border: "none",
-            padding: "var(--spacing-l)",
-            paddingLeft: "var(--spacing-s)",
-            paddingRight: "var(--spacing-s)",
-            boxShadow: "none",
-          }}
-        >
-          <CircularProgressBar
-            size={30}
-            strokeWidth={5}
-            trackColor="var(--bg)"
-            progressColor={isWorking ? "var(--red)" : "var(--green)"}
-            progress={
-              (timeLeft / ((isWorking ? workTime : breakTime) * 60)) * 100
-            }
-          />
-          <span style={{ zIndex: 1 }}>
-            {isWorking ? "Work" : "Break"} {formatTime(timeLeft)}
-          </span>
-        </button>
-      ) : (
-        <button
-          onClick={toggleModal}
-          className="navigate_button centered_content"
-          style={{ height: "40px", width: "40px" }}
-        >
-          <i className="fa-solid fa-clock"></i>
-          <span className="tooltip">Pomodoro</span>
-        </button>
-      )}
+      <motion.div
+        className="no-drag"
+        style={{
+          position: "fixed",
+          right: "var(--spacing-m)",
+          zIndex: 500,
+          backgroundColor: isRunning ? "var(--bg2)" : "transparent",
+          borderRadius: "var(--border-radius)",
+          padding: "0px",
+        }}
+        initial={{ opacity: 0, width: 0 }}
+        animate={{ opacity: 1, width: isRunning ? "auto" : "40px" }}
+        exit={{ opacity: 0, width: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {isRunning ? (
+          <button
+            onClick={toggleModal}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "transparent",
+              backdropFilter: "blur(10px)",
+              borderRadius: "var(--spacing-l)",
+              height: "40px",
+              width: "auto",
+              cursor: "pointer",
+              position: "relative",
+              color: "var(--fg)",
+              fontSize: "medium",
+              gap: "var(--spacing-s)",
+              border: "none",
+              padding: "var(--spacing-l)",
+              paddingLeft: "var(--spacing-s)",
+              paddingRight: "var(--spacing-s)",
+              boxShadow: "none",
+            }}
+          >
+            <CircularProgressBar
+              size={30}
+              strokeWidth={5}
+              trackColor="var(--bg)"
+              progressColor={isWorking ? "var(--red)" : "var(--green)"}
+              progress={
+                (timeLeft / ((isWorking ? workTime : breakTime) * 60)) * 100
+              }
+            />
+            <span style={{ zIndex: 1 }}>
+              {isWorking ? "Work" : "Break"} {formatTime(timeLeft)}
+            </span>
+          </button>
+        ) : (
+          <button
+            onClick={toggleModal}
+            className="navigate_button centered_content"
+            style={{ height: "40px", width: "40px" }}
+          >
+            <i className="fa-solid fa-clock"></i>
+            <span className="tooltip">Pomodoro</span>
+          </button>
+        )}
+      </motion.div>
 
       <AnimatePresence>
         {isPomodoroOpen && (
@@ -532,18 +548,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab, onTabChange }) => {
         </div>
       </div>
 
-      <div
-        className="no-drag"
-        style={{
-          position: "fixed",
-          right: "var(--spacing-m)",
-          display: "flex",
-          alignItems: "center",
-          zIndex: 500,
-        }}
-      >
-        <DemoPomodoroTimer />
-      </div>
+      <DemoPomodoroTimer />
     </div>
   );
 };
@@ -748,7 +753,7 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
           color: "var(--fg)",
           textAlign: "center",
           fontWeight: 600,
-          padding: "2px 0",
+          padding: "4px 0",
           textTransform: "uppercase",
           letterSpacing: "0.05em",
         }}
@@ -912,7 +917,10 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
             onClick={handlePrevYear}
             title="Previous Year"
           >
-            <i className="fa-solid fa-angles-left" />
+            <i
+              className="fa-solid fa-angles-left"
+              style={{ padding: 0, margin: 0 }}
+            />
           </button>
           <button
             className="button"
@@ -922,7 +930,10 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
             onClick={handlePrevMonth}
             title="Previous Month"
           >
-            <i className="fa-solid fa-angle-left" />
+            <i
+              className="fa-solid fa-angle-left"
+              style={{ padding: 0, margin: 0 }}
+            />
           </button>
         </div>
         <h2
@@ -946,7 +957,10 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
             onClick={handleNextMonth}
             title="Next Month"
           >
-            <i className="fa-solid fa-angle-right" />
+            <i
+              className="fa-solid fa-angle-right"
+              style={{ padding: 0, margin: 0 }}
+            />
           </button>
           <button
             className="button"
@@ -956,7 +970,10 @@ const Calendar: React.FC<{ tasks?: DemoCalendarTask[] }> = ({ tasks }) => {
             onClick={handleNextYear}
             title="Next Year"
           >
-            <i className="fa-solid fa-angles-right" />
+            <i
+              className="fa-solid fa-angles-right"
+              style={{ padding: 0, margin: 0 }}
+            />
           </button>
         </div>
       </div>
@@ -1069,10 +1086,103 @@ const CalendarWidget: React.FC<{ tasks?: DemoCalendarTask[] }> = ({
 );
 
 const QuoteWidget: React.FC = () => {
-  const quote = {
-    content: "Don't watch the clock; do what it does. Keep going.",
-    author: "Sam Levenson",
-  };
+  const [quote, setQuote] = useState<{
+    content: string;
+    author: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const quotes = [
+    {
+      content: "The only way to do great work is to love what you do.",
+      author: "Steve Jobs",
+    },
+    {
+      content:
+        "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+      author: "Winston Churchill",
+    },
+    {
+      content:
+        "The future belongs to those who believe in the beauty of their dreams.",
+      author: "Eleanor Roosevelt",
+    },
+    {
+      content: "Don't watch the clock; do what it does. Keep going.",
+      author: "Sam Levenson",
+    },
+    {
+      content:
+        "The only limit to our realization of tomorrow is our doubts of today.",
+      author: "Franklin D. Roosevelt",
+    },
+    {
+      content: "It always seems impossible until it's done.",
+      author: "Nelson Mandela",
+    },
+    {
+      content: "The way to get started is to quit talking and begin doing.",
+      author: "Walt Disney",
+    },
+    {
+      content: "Believe you can and you're halfway there.",
+      author: "Theodore Roosevelt",
+    },
+    {
+      content:
+        "The best time to plant a tree was 20 years ago. The second best time is now.",
+      author: "Chinese Proverb",
+    },
+    {
+      content:
+        "Your time is limited, don't waste it living someone else's life.",
+      author: "Steve Jobs",
+    },
+    {
+      content: "The journey of a thousand miles begins with one step.",
+      author: "Lao Tzu",
+    },
+    {
+      content:
+        "What you get by achieving your goals is not as important as what you become by achieving your goals.",
+      author: "Zig Ziglar",
+    },
+    {
+      content: "The best revenge is massive success.",
+      author: "Frank Sinatra",
+    },
+    {
+      content:
+        "A person who never made a mistake never tried anything new.",
+      author: "Albert Einstein",
+    },
+  ];
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+      setLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (loading) {
+    return (
+      <div
+        className="widget_block quote-widget"
+        style={{
+          minHeight: "120px",
+        }}
+      >
+        <div style={{ fontSize: "var(--text-base)", opacity: 0.5 }}>
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
+  if (!quote) return null;
+
   return (
     <div
       className="widget_block quote-widget"
@@ -1108,22 +1218,50 @@ const QuoteWidget: React.FC = () => {
 };
 
 /* ActivityGraph from Welcome/Widgets.tsx of the app: Github-style contribution
-   heatmap. The demo feeds it a synthetic Map<date, count> (no backend). */
-function buildDemoActivityCounts(): Map<string, number> {
+   heatmap. The demo feeds it a synthetic Map<date, count> (no backend).
+   Seeded RNG keeps the render deterministic; weekdays are busier than
+   weekends, counts skew low, and there are quiet gaps + hot streaks so the
+   heatmap looks like real activity instead of a regular pattern. */
+function buildDemoActivityCounts(seed = 7): Map<string, number> {
   const counts = new Map<string, number>();
   const year = new Date().getFullYear();
-  let seed = 7;
+  let s = seed >>> 0;
   const rand = () => {
-    seed = (seed * 1103515245 + 12345) % 2147483648;
-    return seed / 2147483648;
+    s |= 0;
+    s = (s + 0x6d2b79f5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+  const today = new Date();
+  // 1-2 quiet "vacation" gaps: random start + length
+  const gaps: Array<{ from: number; to: number }> = [];
+  const gapCount = 1 + Math.floor(rand() * 2);
+  for (let g = 0; g < gapCount; g++) {
+    const from = Math.floor(rand() * 300);
+    gaps.push({ from, to: from + 8 + Math.floor(rand() * 14) });
+  }
+  // a recent hot streak: busier last 2-5 weeks
+  const streakStart = 365 - Math.floor(rand() * 60);
   for (let d = 0; d < 365; d++) {
     const date = new Date(year, 0, 1);
     date.setDate(date.getDate() + d);
-    if (date > new Date()) continue;
-    if (d % 3 === 0 || (d > 240 && d % 2 === 0)) {
-      counts.set(date.toLocaleDateString("en-CA"), 1 + Math.floor(rand() * 9));
-    }
+    if (date > today) continue;
+    if (gaps.some((g) => d >= g.from && d <= g.to)) continue;
+    const weekday = date.getDay();
+    const isWeekend = weekday === 0 || weekday === 6;
+    let p = isWeekend ? 0.28 : 0.62;
+    if (d >= streakStart) p = Math.min(0.95, p + 0.25);
+    if (rand() > p) continue;
+    // counts skew low: many 1-3, fewer 4-6, rare 7-10
+    const r = rand();
+    const count =
+      r < 0.45
+        ? 1 + Math.floor(rand() * 3)
+        : r < 0.75
+          ? 4 + Math.floor(rand() * 3)
+          : 7 + Math.floor(rand() * 4);
+    counts.set(date.toLocaleDateString("en-CA"), count);
   }
   return counts;
 }
@@ -2498,7 +2636,7 @@ const BoardsHeader: React.FC<{
   onCreateNewBoard: () => void;
   onToggleList: () => void;
 }> = ({ onCreateNewBoard, onToggleList }) => (
-  <div className="boards-list-header" style={{ width: "100%" }}>
+  <div className="boards-list-header">
     <h3>BOARDS</h3>
     <div
       style={{
@@ -2556,8 +2694,7 @@ const BoardElement: React.FC<{
       margin: "5px 0",
       borderRadius: "var(--border-radius)",
       outline: "none",
-      width:
-        "calc(100% - var(--spacing-s) - var(--spacing-s) - var(--spacing-s))",
+      width: "calc(100% - var(--spacing-s) - var(--spacing-s))",
       padding: "0 0 0 var(--spacing-s)",
       height: "40px",
       display: "flex",
@@ -2764,6 +2901,8 @@ const EditTaskModal: React.FC<{
         exit={{ opacity: 0, y: -200 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false }}
       >
         <div
           style={{
@@ -3189,12 +3328,7 @@ const TasksTab: React.FC = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15, delay: 0.15 }}
-                style={{
-                  padding: "10px",
-                  height: "100%",
-                  overflowY: "auto",
-                  marginLeft: "auto",
-                }}
+                style={{ height: "100%", overflowY: "auto" }}
               >
                 <BoardsHeader
                   onCreateNewBoard={createNewBoard}
@@ -3224,7 +3358,7 @@ const TasksTab: React.FC = () => {
 
         <div
           className="kanbanview"
-          style={{ flex: 1, width: "auto", maxWidth: "none", minWidth: 0 }}
+          style={{ width: "100%", display: "flex" }}
           data-droppable="kanban"
           onDragOver={(e) => {
             e.preventDefault();
@@ -3259,15 +3393,7 @@ const TasksTab: React.FC = () => {
               onTaskDrop={handleTaskDrop}
             />
           ))}
-          <motion.div
-            className="task-main-block mini-task-main-block"
-            style={{
-              flex: "0 0 220px",
-              width: 220,
-              alignSelf: "flex-start",
-              minHeight: 200,
-            }}
-          >
+          <motion.div className="task-main-block mini-task-main-block">
             <button
               className="tr_button task-block-header centered_content"
               style={{
@@ -4359,6 +4485,8 @@ const ProjectMembersModal: React.FC<{
         exit={{ opacity: 0, y: -200 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false }}
       >
         <button
           className="modal_close_button"
@@ -4857,6 +4985,8 @@ const ProjectModal: React.FC<{
         exit={{ opacity: 0, y: -200 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false }}
       >
         <button
           className="modal_close_button"
@@ -5001,12 +5131,7 @@ const ProjectModal: React.FC<{
               <button
                 className="button"
                 onClick={() => setMembersModalOpen(true)}
-                style={{
-                  height: "34px",
-                  padding: "0 var(--spacing-m)",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                }}
+                style={{ height: "34px", padding: "0 var(--spacing-m)" }}
               >
                 <i className="fa-solid fa-user-gear"></i> Manage members
               </button>
@@ -5370,8 +5495,20 @@ const ProjectsTab: React.FC = () => {
 
 /* ------------------------------- Stats tab --------------------------------- */
 
+const ActivityWidget: React.FC = () => {
+  const activityCounts = useMemo(() => buildDemoActivityCounts(42), []);
+  return <ActivityGraph activityCounts={activityCounts} />;
+};
+
 const StatisticTab: React.FC = () => (
-  <div className="tab-content" id="stats_block">
+  <motion.div
+    className="tab-content"
+    id="stats_block"
+    initial={{ opacity: 0, y: 100 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.3, delay: 0.08 }}
+  >
     <div className="stats_content">
       <div className="inner-container">
         <div className="stats_grid">
@@ -5387,10 +5524,11 @@ const StatisticTab: React.FC = () => (
           <DaysActivityBlock />
           <TasksProgressBlock />
           <LongestStreakBlock />
+          <ActivityWidget />
         </div>
       </div>
     </div>
-  </div>
+  </motion.div>
 );
 
 /* --------------------------------- Account -------------------------------- */
@@ -5660,8 +5798,186 @@ const AccountTab: React.FC = () => {
 /* -------------------------------- Settings --------------------------------- */
 /* Mirrors Settings/SettingsComponents.tsx (all blocks, static controls).     */
 
-const SettingsTab: React.FC = () => (
-  <div className="tab-content" id="settings_block">
+const DemoVersionInfoModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const newVersion = "2.4.2-alpha";
+  const currentVersion = "2.4.2-alpha";
+  const isUpdateAvailable = currentVersion !== newVersion;
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent): void => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
+  const handleOverlayClick = (e: React.MouseEvent): void => {
+    if (
+      contentRef.current &&
+      !contentRef.current.contains(e.target as Node)
+    ) {
+      onClose();
+    }
+  };
+
+  return (
+    <motion.div
+      className="modal-overlay"
+      style={{ userSelect: "none" }}
+      initial={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      onClick={handleOverlayClick}
+    >
+      <motion.div
+        className="project-modal-content"
+        ref={contentRef}
+        style={{ width: "calc(90% - var(--spacing-xxl) - var(--spacing-xxl))" }}
+        initial={{ opacity: 0, y: -200 }}
+        exit={{ opacity: 0, y: -200 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="modal_close_button"
+          onClick={onClose}
+          aria-label="Close"
+          title="Close"
+        >
+          <i className="fa-solid fa-xmark"></i>
+        </button>
+        <h2 style={{ margin: 0, marginBottom: "var(--spacing-l)" }}>Updates</h2>
+
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "var(--spacing-xxl)",
+          }}
+        >
+          <i
+            className="fa-solid fa-rotate"
+            style={{ fontSize: "var(--modal-icon-size)", opacity: 0.6 }}
+          ></i>
+          <span>New version: {newVersion}</span>
+          {!isUpdateAvailable && (
+            <span style={{ opacity: 0.4, fontSize: "0.9em" }}>Up to date</span>
+          )}
+        </div>
+
+        {isUpdateAvailable && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingTop: "var(--spacing-l)",
+            }}
+          >
+            <button className="button">
+              <i className="fa-solid fa-arrow-down" /> Download
+            </button>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const DemoThirdPartyNoticesModal: React.FC<{ onClose: () => void }> = ({
+  onClose,
+}) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent): void => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
+  const handleOverlayClick = (e: React.MouseEvent): void => {
+    if (
+      contentRef.current &&
+      !contentRef.current.contains(e.target as Node)
+    ) {
+      onClose();
+    }
+  };
+
+  return (
+    <motion.div
+      className="modal-overlay"
+      style={{ userSelect: "none" }}
+      initial={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      onClick={handleOverlayClick}
+    >
+      <motion.div
+        className="project-modal-content"
+        ref={contentRef}
+        style={{ width: "calc(90% - var(--spacing-xxl) - var(--spacing-xxl))" }}
+        initial={{ opacity: 0, y: -200 }}
+        exit={{ opacity: 0, y: -200 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="modal_close_button"
+          onClick={onClose}
+          aria-label="Close"
+          title="Close"
+        >
+          <i className="fa-solid fa-xmark"></i>
+        </button>
+        <h2 style={{ margin: 0, marginBottom: "var(--spacing-l)" }}>
+          Third party notices
+        </h2>
+        <pre
+          style={{
+            flex: 1,
+            overflow: "auto",
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            margin: 0,
+            padding: "var(--spacing-m)",
+            background: "transparent",
+            borderRadius: "var(--border-radius)",
+            fontSize: "12px",
+            lineHeight: "1.5",
+            fontFamily: "monospace",
+            userSelect: "text",
+          }}
+        >
+          {`OWL demo — third party notices.
+
+- React / React DOM (MIT)
+- Framer Motion (MIT)
+- Chart.js (MIT)
+- Milkdown / ProseMirror (MIT)
+- FontAwesome Free (CC BY 4.0 / MIT)
+
+Full license texts ship with the desktop app.`}
+        </pre>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const SettingsTab: React.FC = () => {
+  const [showVersionModal, setShowVersionModal] = useState(false);
+  const [showThirdPartyModal, setShowThirdPartyModal] = useState(false);
+  return (
+    <div className="tab-content" id="settings_block">
     <div className="settings_content">
       <div className="inner-container">
         <div style={{ width: "100%", maxWidth: "600px" }}>
@@ -5813,7 +6129,7 @@ const SettingsTab: React.FC = () => (
               <button
                 className="button"
                 style={{ width: "100%" }}
-                onClick={() => undefined}
+                onClick={() => setShowVersionModal(true)}
               >
                 <i className="fa-solid fa-rotate-right" /> Check for updates
               </button>
@@ -5822,7 +6138,7 @@ const SettingsTab: React.FC = () => (
               <button
                 className="button"
                 style={{ width: "100%" }}
-                onClick={() => undefined}
+                onClick={() => setShowThirdPartyModal(true)}
               >
                 <i className="fa-solid fa-file-lines" /> Third party notices
               </button>
@@ -5831,14 +6147,31 @@ const SettingsTab: React.FC = () => (
               className="version centered_content"
               style={{ textAlign: "center", opacity: "0.6" }}
             >
-              App version: 1.3.2-alpha
+              App version: 2.4.2-alpha
             </p>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+      <AnimatePresence>
+        {showVersionModal && (
+          <DemoVersionInfoModal
+            key="version-info"
+            onClose={() => setShowVersionModal(false)}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showThirdPartyModal && (
+          <DemoThirdPartyNoticesModal
+            key="third-party-notices"
+            onClose={() => setShowThirdPartyModal(false)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 /* ------------------------------ App shell ----------------------------------- */
 
