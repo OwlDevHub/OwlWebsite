@@ -14,7 +14,7 @@ import { Reveal } from "../ui/Reveal";
 import LazyDemo from "../ui/LazyDemo";
 
 const DemoBadge = () => (
-  <span className="demo-badge">Click to explore</span>
+  <span className="demo-badge">It's interactive )</span>
 );
 
 const CliWindow = ({ lines }) => (
@@ -123,7 +123,7 @@ const features = [
   {
     title: "Plan, track, and ship in one workspace",
     desc: "OWL replaces the pile of tabs with a single, fast workspace. Boards, lists, timelines, and docs live side by side - and everything stays in sync the moment you type.",
-    link: { href: "#download_app", label: "Join the beta" },
+    link: { href: "#download_app", label: "Try for free" },
     media: (
       <div className="demo-product">
         <LazyDemo defaultTab="tasks" />
@@ -157,14 +157,14 @@ const features = [
   {
     title: "Real-time sync, everywhere",
     desc: "Every change propagates instantly across all your devices and team members. CRDT-based sync resolves concurrent edits automatically - no conflicts, no merges, no stale state.",
-    link: { href: "#download_app", label: "Join the beta" },
+    link: { href: "#pricing", label: "Get Pro" },
     media: <SyncStage />,
     reverse: false,
   },
   {
     title: "In every tool, at every step",
     desc: "Full terminal integration for advanced workflows. Script and pipe it - without leaving your shell.",
-    link: { href: "#download_app", label: "Join the beta" },
+    link: { href: "#download_app", label: "Get CLI" },
     media: (
       <CliWindow
         lines={[

@@ -653,7 +653,7 @@ hw {
   position: relative;
   z-index: 1;
   width: 100vw;
-  margin-left: calc(50% - 50vw);
+  margin-left: calc(55% - 50vw);
   height: auto;
   padding: clamp(3rem, 2vw, 6rem)
     max(var(--space-lg), calc((100vw - var(--max-width)) / 2));
