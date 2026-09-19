@@ -30,7 +30,6 @@ const plans = [
     features: [
       "Unlimited projects",
       "Real-time collaboration",
-      "Priority support",
       "Cross-device sync",
     ],
   },
@@ -46,8 +45,7 @@ const plans = [
       "Everything in Pro",
       "Admin controls & roles",
       "Custom integrations",
-      "Dedicated onboarding",
-      "SLA guarantee",
+      "Priority support",
     ],
   },
 ];
