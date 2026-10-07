@@ -29,3 +29,9 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: vi.fn(),
   })),
 });
+if (typeof globalThis.localStorage?.getItem !== "function") {
+  Object.defineProperty(globalThis, "localStorage", {
+    configurable: true,
+    value: window._localStorage,
+  });
+}
